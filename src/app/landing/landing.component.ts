@@ -61,7 +61,8 @@ export class LandingComponent implements OnInit {
   config: ToasterConfig;
 
   static parseEOS(tk_string) {
-    if (tk_string.split(' ')[1] === 'EOS') {
+    // Adrian (Issue - 3): Set EVO as the root token.
+    if (tk_string.split(' ')[1] === 'EVO') {
       return parseFloat(tk_string.split(' ')[0]);
     } else {
       return 0;

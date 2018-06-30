@@ -426,8 +426,9 @@ export class LandingComponent implements OnInit {
             balance += LandingComponent.parseEOS(tk);
           });
           // Add stake balance
-          balance += LandingComponent.parseEOS(acc['total_resources']['cpu_weight']);
-          balance += LandingComponent.parseEOS(acc['total_resources']['net_weight']);
+          // Adrian (Issue - 5): Do not add these two values right now
+          //balance += LandingComponent.parseEOS(acc['total_resources']['cpu_weight']);
+          //balance += LandingComponent.parseEOS(acc['total_resources']['net_weight']);
           const accData = {
             name: acc['account_name'],
             full_balance: Math.round((balance) * 10000) / 10000

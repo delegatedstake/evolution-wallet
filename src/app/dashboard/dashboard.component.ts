@@ -278,8 +278,11 @@ export class DashboardComponent implements OnInit {
         acc['tokens'].forEach((tk) => {
           balance += LandingComponent.parseEOS(tk);
         });
-        const net = LandingComponent.parseEOS(acc['total_resources']['net_weight']);
-        const cpu = LandingComponent.parseEOS(acc['total_resources']['cpu_weight']);
+        // Adrian (Issue - 5): Set net and cpu values to 0 for now
+        //const net = LandingComponent.parseEOS(acc['total_resources']['net_weight']);
+        //const cpu = LandingComponent.parseEOS(acc['total_resources']['cpu_weight']);
+        const net = 0;
+        const cpu = 0;
         balance += net;
         balance += cpu;
         const accData = {

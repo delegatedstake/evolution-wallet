@@ -392,7 +392,9 @@ export class EOSJSService {
   unstake(account, amount) {
     return new Promise((resolve, reject) => {
       this.eos['getAccount'](account).then((accountInfo) => {
-        const current_stake = accountInfo['cpu_weight'] + accountInfo['net_weight'];
+        // Adrian (Issue - 5): Set net and cpu values to 0 for now
+        //const current_stake = accountInfo['cpu_weight'] + accountInfo['net_weight'];
+        const current_stake = 0;
         if (current_stake - amount >= 10000) {
           const split = ((amount / 2) / 10000).toFixed(4);
           this.eos['undelegatebw']({

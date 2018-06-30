@@ -35,8 +35,11 @@ export class AccountsService {
     let net = 0;
     let cpu = 0;
     if (acc['self_delegated_bandwidth']) {
-      net = AccountsService.parseEOS(acc['self_delegated_bandwidth']['net_weight']);
-      cpu = AccountsService.parseEOS(acc['self_delegated_bandwidth']['cpu_weight']);
+      // Adrian (Issue - 5): Set net and cpu values to 0 for now
+      //net = AccountsService.parseEOS(acc['self_delegated_bandwidth']['net_weight']);
+      //cpu = AccountsService.parseEOS(acc['self_delegated_bandwidth']['cpu_weight']);
+      net = 0;
+      cpu = 0;
       balance += net;
       balance += cpu;
     }

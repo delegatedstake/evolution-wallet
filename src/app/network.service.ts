@@ -20,7 +20,7 @@ export class NetworkService {
 
   publicEndpoints: Endpoint[];
   eos: any;
-  mainnetId = 'aca376f206b8fc25a6ed44dbdc66547c36c6c33e3a119ffbeaef943642f0e906';
+  mainnetId = 'cf057bbfb72640471fd910bcb67639c22df9f92470936cddc1ade0e2f2e7dc4f';
   genesistx = 'ad77575a8b4f52e477682e712b1cbd884299468db6a94d909f90c6961cea9b02';
   voteref = 'b23f537e8ab29fbcec8b533081ef7e12b146899ca42a3fc9eb608258df9983d9';
   txrefBlock = 191;
@@ -41,8 +41,9 @@ export class NetworkService {
 
   constructor(private eosjs: EOSJSService, private router: Router, public aService: AccountsService) {
     this.publicEndpoints = [
-      {url: 'http://br.eosrio.io:8080', owner: 'EOS Rio', latency: 0, filters: []},
-      {url: 'http://api.eosrio.io:8080', owner: 'EOS Rio', latency: 0, filters: []},
+      // Adrian (Issue - 1): Make sure to remove the elements from the filter array when filter check is enabled
+      {url: 'http://localhost:8888', owner: 'Doors', latency: 0, filters: ['eosio:voteproducer', 'eosio.token:transfer']},
+      //{url: 'http://api.eosrio.io:8080', owner: 'EOS Rio', latency: 0, filters: []},
       // {url: 'http://api.eosnewyork.io', owner: 'EOS NY', latency: 0, filters: []},
       // {url: 'http://api.hkeos.com', owner: 'HK EOS', latency: 0, filters: []},
       // {url: 'https://eos.greymass.com', owner: 'Greymass', latency: 0, filters: []},
@@ -57,9 +58,10 @@ export class NetworkService {
     this.status = '';
     this.networkingReady.next(false);
     this.scanNodes().then(() => {
-      this.verifyFilters().then(() => {
+      // Adrian (Issue - 1): Disable filter check
+      //this.verifyFilters().then(() => {
         this.extractValidNode();
-      });
+      //});
     });
     console.log('Starting timer...');
     this.startTimeout();

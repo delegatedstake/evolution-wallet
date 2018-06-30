@@ -197,8 +197,10 @@ export class EOSJSService {
 
   getConstitution() {
     this.eos['getCode']('eosio').then((code) => {
-      const temp = code['abi']['ricardian_clauses'][0]['body'];
-      this.constitution = temp.replace(/(?:\r\n|\r|\n)/g, '<br>');
+      // Adrian (Issue - 2): Set the constitution to static text until ricardian clause contract is created
+      //const temp = code['abi']['ricardian_clauses'][0]['body'];
+      //this.constitution = temp.replace(/(?:\r\n|\r|\n)/g, '<br>');
+      this.constitution = 'This is the constitution';
     });
   }
 

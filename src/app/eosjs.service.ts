@@ -277,15 +277,15 @@ export class EOSJSService {
         tr['buyrambytes']({payer: creator, receiver: name, bytes: rambytes});
         tr['delegatebw']({
           from: creator, receiver: name,
-          stake_net_quantity: (delegateAmount * 0.3).toFixed(4) + ' EOS',
-          stake_cpu_quantity: (delegateAmount * 0.7).toFixed(4) + ' EOS',
+          stake_net_quantity: (delegateAmount * 0.3).toFixed(4) + ' EVO', // Adrian (Issue - 7)
+          stake_cpu_quantity: (delegateAmount * 0.7).toFixed(4) + ' EVO', // Adrian (Issue - 7)
           transfer: transfer ? 1 : 0
         });
         if (giftAmount > 0) {
           tr['transfer']({
             from: creator,
             to: name,
-            quantity: giftAmount.toFixed(4) + ' EOS',
+            quantity: giftAmount.toFixed(4) + ' EVO', // Adrian (Issue - 7)
             memo: giftMemo
           });
         }
@@ -371,8 +371,8 @@ export class EOSJSService {
         this.eos['delegatebw']({
           from: account,
           receiver: account,
-          stake_net_quantity: split + ' EOS',
-          stake_cpu_quantity: split + ' EOS',
+          stake_net_quantity: split + ' EVO', // Adrian (Issue - 7)
+          stake_cpu_quantity: split + ' EVO', // Adrian (Issue - 7)
           transfer: 1
         }, (err, result) => {
           if (err) {
@@ -400,8 +400,8 @@ export class EOSJSService {
           this.eos['undelegatebw']({
             from: account,
             receiver: account,
-            unstake_net_quantity: split + ' EOS',
-            unstake_cpu_quantity: split + ' EOS'
+            unstake_net_quantity: split + ' EVO', // Adrian (Issue - 7)
+            unstake_cpu_quantity: split + ' EVO' // Adrian (Issue - 7)
           }, (err, result) => {
             if (err) {
               console.log(err);

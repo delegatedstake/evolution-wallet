@@ -12,7 +12,7 @@
             (animCreated)="handleAnimation($event)">
           </lottie-animation-view>
         </div>
-        <div class="slogan">Your simple and secure EOS wallet</div>
+        <div class="slogan">Your simple and secure EVO wallet</div>
         <ng-container *ngIf="busy && network.status === ''">
           <fa-layers class="mt-2 mb-1">
             <fa-icon [icon]="['far', 'spinner']" [spin]="true" size="2x"></fa-icon>
@@ -48,7 +48,7 @@
             <ng-container *ngIf="checkerr === ''">
               <div class="card-footer" *ngFor="let account of accounts">
                                 <span style="float: left;">You have: <span
-                                  class="blue">{{account.full_balance}} EOS</span></span>
+                                  class="blue">{{account.full_balance}} EVO</span></span>
                 <span style="float: right;">Account name: <span
                   class="blue">{{account.name}}</span></span>
               </div>
@@ -77,7 +77,7 @@
             <div class="card-block">
               <div class="info">You can do a quick check of your account here</div>
               <mat-form-field class="public-input">
-                <input matInput type="text" placeholder="EOS Public key" [(ngModel)]="publicEOS">
+                <input matInput type="text" placeholder="EVO Public key" [(ngModel)]="publicEOS">
                 <mat-hint align="start">
                   ctrl c + ctrl v to copy & paste
                 </mat-hint>
@@ -89,7 +89,7 @@
             <ng-container *ngIf="checkerr === ''">
               <div class="card-footer" *ngFor="let account of accounts">
                                 <span style="float: left;">You have: <span
-                                  class="blue">{{account.full_balance}} EOS</span></span>
+                                  class="blue">{{account.full_balance}} EVO</span></span>
                 <span style="float: right;">Account name: <span
                   class="blue">{{account.name}}</span></span>
               </div>
@@ -126,7 +126,7 @@
     <form [formGroup]="pvtform">
       <mat-form-field class="mt-1" style="width: 100%;">
         <input #pkField matInput type="password" formControlName="private_key"
-               placeholder="EOS Private key">
+               placeholder="EVO Private key">
         <fa-icon matSuffix *ngIf="pkField.type === 'password'" [icon]="['far', 'eye']" size="lg" class="copy"
                  (click)="pkField.type = 'text'"></fa-icon>
         <fa-icon matSuffix *ngIf="pkField.type === 'text'" [icon]="['far', 'eye-slash']" size="lg" class="copy"
@@ -179,7 +179,7 @@
   </clr-wizard-page>
   <clr-wizard-page [clrWizardPageNextDisabled]="!agree">
     <ng-template clrPageTitle>Step 3</ng-template>
-    <h5 style="color: #bebebe;">EOS Constitution</h5>
+    <h5 style="color: #bebebe;">EVO Constitution</h5>
     <div class="constitution" [innerHTML]="eos.constitution"></div>
     <mat-checkbox [(ngModel)]="agree">I abide by the constitution</mat-checkbox>
   </clr-wizard-page>
@@ -281,7 +281,7 @@
   </clr-wizard-page>
   <clr-wizard-page [clrWizardPageNextDisabled]="!agree2">
     <ng-template clrPageTitle>Step 3</ng-template>
-    <h5 style="color: #bebebe;">EOS Constitution</h5>
+    <h5 style="color: #bebebe;">EVO Constitution</h5>
     <div class="constitution" [innerHTML]="eos.constitution"></div>
     <mat-checkbox [(ngModel)]="agree2">I abide by the constitution</mat-checkbox>
   </clr-wizard-page>
@@ -317,11 +317,11 @@
   <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
   <clr-wizard-page>
     <ng-template clrPageTitle>Intro</ng-template>
-    <h5 class="mt-0">In eos, creation of new accounts costs a little of eos, because the account must have an
+    <h5 class="mt-0">In EVO, creation of new accounts costs a little of EVO, because the account must have an
       initial stake do perform actions.</h5>
     <h5>Block producers are working on a solution for this, but until then, we don't want to deprive
       users of creating new accounts. So we thought on an organic approach to this :)</h5>
-    <h5>At the end of this process, a code will be generated. You will have to send this code to a friend that has eos
+    <h5>At the end of this process, a code will be generated. You will have to send this code to a friend that has EVO
       on the mainnet, so he can create your account using SimplEOS.</h5>
     <h5><strong>This code DOES NOT contain your private keys</strong>, only your public keys and the desired account
       name.</h5>
@@ -333,10 +333,10 @@
                    (clrWizardPagePrevious)="wizardnew.previous()"
                    (clrWizardPageOnCancel)="resetAndClose()">
     <ng-template clrPageTitle>Step 1</ng-template>
-    <h5 style="color: #a9a9a9">Choose your EOS account name</h5>
+    <h5 style="color: #a9a9a9">Choose your EVO account name</h5>
     <h5 class="mt-0">12 characters. Allows all letters and numbers 1-5</h5>
     <mat-form-field class="mt-1" style="display: block; width: 180px">
-      <input matInput #account placeholder="EOS account name" maxlength="12" (keyup.enter)="verifyAccountName(false)"
+      <input matInput #account placeholder="EVO account name" maxlength="12" (keyup.enter)="verifyAccountName(false)"
              [(ngModel)]="accountname">
       <mat-hint align="end">{{account.value.length}} / 12</mat-hint>
     </mat-form-field>
@@ -401,4 +401,3 @@
     </div>
   </clr-wizard-page>
 </clr-wizard>
-

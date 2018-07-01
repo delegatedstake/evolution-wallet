@@ -122,14 +122,15 @@ export class SendComponent implements OnInit {
       this.sendForm.patchValue({
         amount: ''
       });
-      if (symbol !== 'EOS') {
+      // Adrian (Issue - 3)
+      if (symbol !== 'EVO') {
         const tk_idx = this.aService.tokens.findIndex((val) => {
           return val.name === symbol;
         });
         this.selectedToken = this.aService.tokens[tk_idx];
         this.token_balance = parseFloat(this.selectedToken['balance'].split(' ')[0]);
       } else {
-        this.selectedToken = {name: 'EOS', price: 1.0000};
+        this.selectedToken = {name: 'EVO', price: 1.0000};
       }
     });
     this.filteredContacts = this.sendForm.get('to').valueChanges.pipe(startWith(''), map(value => this.filter(value, false)));
@@ -152,8 +153,9 @@ export class SendComponent implements OnInit {
   }
 
   setMax() {
+    // Adrian (Issue - 3)
     this.sendForm.patchValue({
-      amount: this.sendForm.get('token').value === 'EOS' ? this.unstaked : this.token_balance
+      amount: this.sendForm.get('token').value === 'EVO' ? this.unstaked : this.token_balance
     });
   }
 
@@ -162,7 +164,8 @@ export class SendComponent implements OnInit {
       this.sendForm.controls['amount'].setErrors({'incorrect': true});
       this.amounterror = 'invalid amount';
     } else {
-      const max = this.sendForm.get('token').value === 'EOS' ? this.unstaked : this.token_balance;
+      // Adrian (Issue - 3)
+      const max = this.sendForm.get('token').value === 'EVO' ? this.unstaked : this.token_balance;
       if (parseFloat(this.sendForm.value.amount) > max) {
         this.sendForm.controls['amount'].setErrors({'incorrect': true});
         this.amounterror = 'invalid amount';
@@ -359,7 +362,8 @@ export class SendComponent implements OnInit {
         if (res === true) {
           let contract = 'eosio.token';
           const tk_name = this.sendForm.get('token').value;
-          if (tk_name !== 'EOS') {
+          // Adrian (Issue - 3)
+          if (tk_name !== 'EVO') {
             const idx = this.aService.tokens.findIndex((val) => {
               return val.name === tk_name;
             });

@@ -116,7 +116,7 @@ export class AccountsService {
           if (contract === 'eosio.token') {
             // NATIVE TOKEN
             amount = act['data']['quantity']['split'](' ')[0];
-            symbol = 'EOS';
+            symbol = 'EVO'; // Adrian (Issue - 3): Change native token
           } else {
             // CUSTOM TOKEN
             amount = act['data']['quantity']['split'](' ')[0];

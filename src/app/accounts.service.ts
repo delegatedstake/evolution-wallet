@@ -262,7 +262,43 @@ export class AccountsService {
       const tempPromise = new Promise((resolve, reject) => {
         this.eos.getAccountInfo(account['name']).then((newdata) => {
           this.eos.getTokens(account['name']).then((tokens) => {
-            this.eos.getRefunds(account['name']).then((refunds) => {
+            // Adrian (Issue - 6): Remove getRefunds call and execute the code executed after the promise is returned
+            let ref_time = null;
+            let balance = 0;
+            let ref_net = 0;
+            let ref_cpu = 0;
+            if (refunds.rows.length > 0) {
+              ref_net = AccountsService.parseEOS(refunds.rows[0]['cpu_amount']);
+              ref_cpu = AccountsService.parseEOS(refunds.rows[0]['cpu_amount']);
+              balance += ref_net;
+              balance += ref_cpu;
+              const tempDate = refunds.rows[0]['request_time'] + '.000Z';
+              ref_time = new Date(tempDate);
+            }
+            tokens.forEach((tk) => {
+              balance += AccountsService.parseEOS(tk);
+            });
+            let net = 0;
+            let cpu = 0;
+            if (newdata['self_delegated_bandwidth']) {
+              // Adrian (Issue - 5)
+              //net = AccountsService.parseEOS(newdata['self_delegated_bandwidth']['net_weight']);
+              //cpu = AccountsService.parseEOS(newdata['self_delegated_bandwidth']['cpu_weight']);
+              balance += net;
+              balance += cpu;
+            }
+            this.accounts[idx].name = account['name'];
+            this.accounts[idx].full_balance = Math.round((balance) * 10000) / 10000;
+            this.accounts[idx].staked = net + cpu;
+            this.accounts[idx].unstaking = ref_net + ref_cpu;
+            this.accounts[idx].unstakeTime = ref_time;
+            this.accounts[idx].details = newdata;
+            this.lastUpdate.next({
+              account: account['name'],
+              timestamp: new Date()
+            });
+            resolve();
+            /**this.eos.getRefunds(account['name']).then((refunds) => {
               let ref_time = null;
               let balance = 0;
               let ref_net = 0;
@@ -281,8 +317,9 @@ export class AccountsService {
               let net = 0;
               let cpu = 0;
               if (newdata['self_delegated_bandwidth']) {
-                net = AccountsService.parseEOS(newdata['self_delegated_bandwidth']['net_weight']);
-                cpu = AccountsService.parseEOS(newdata['self_delegated_bandwidth']['cpu_weight']);
+                // Adrian (Issue - 5)
+                //net = AccountsService.parseEOS(newdata['self_delegated_bandwidth']['net_weight']);
+                //cpu = AccountsService.parseEOS(newdata['self_delegated_bandwidth']['cpu_weight']);
                 balance += net;
                 balance += cpu;
               }
@@ -297,7 +334,7 @@ export class AccountsService {
                 timestamp: new Date()
               });
               resolve();
-            });
+            });**/
           }).catch((error2) => {
             console.log('Error on getTokens', error2);
             reject();

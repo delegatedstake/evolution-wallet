@@ -5,6 +5,7 @@
 /*@import "~@fortawesome/fontawesome-pro/css/solid.css";*/
 
 html, body {
+  color: #ffffff;
   /*background: url("assets/rio.jpg") fixed;*/
   /*background-size: cover;*/
   background: -webkit-linear-gradient(to right, #232526, #414345); /* Chrome 10-25, Safari 5.1-6 */
@@ -133,7 +134,7 @@ body {
 
 /*clarity's modal*/
 .modal-dialog .modal-content {
-  background-color: #191919 !important;
+  background-color: #2f354b !important;
 }
 
 .close:focus {
@@ -171,7 +172,7 @@ body {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
-  background-color: #555;
+  background-color: #0094d2;
 }
 /*scroll bar end*/
 

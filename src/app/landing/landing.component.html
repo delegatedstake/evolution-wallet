@@ -4,15 +4,16 @@
     <div class="row animate fadeInDown">
 
       <div class="col-md-12 text-center">
-        <div class="anim-logo">
-          <lottie-animation-view
+        <div class="" style="margin-top:25px;margin-bottom:15px;">
+          <!--<lottie-animation-view
             [options]="lottieConfig"
             [width]="300"
             [height]="'auto'"
             (animCreated)="handleAnimation($event)">
-          </lottie-animation-view>
+          </lottie-animation-view>-->
+          <img src="../../assets/images/evo_logo.png" height="75px" />
         </div>
-        <div class="slogan">Your simple and secure EOS wallet</div>
+        <div class="slogan">Your EvolutionOS EOS and EVO wallet</div>
         <ng-container *ngIf="busy && network.status === ''">
           <fa-layers class="mt-2 mb-1">
             <fa-icon [icon]="['far', 'spinner']" [spin]="true" size="2x"></fa-icon>
@@ -66,12 +67,12 @@
             <div class="row">
               <div class="col-md-6">
                 <button class="btn btn-inverse btn-block" (click)="existingWallet = true">
-                  Import existing key
+                  Import existing EOS key
                 </button>
               </div>
               <div class="col-md-6">
                 <button class="btn btn-inverse btn-block" (click)="newWallet = true">
-                  Request New Account
+                  Request New EOS Account
                 </button>
               </div>
             </div>
@@ -417,4 +418,3 @@
     </div>
   </clr-wizard-page>
 </clr-wizard>
-

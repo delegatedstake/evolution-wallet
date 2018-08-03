@@ -1,0 +1,93 @@
+<div class="container-fluid" style="height: 100%; overflow:hidden;">
+  <div class="row flex-items-xs-between" style="height: 100%;">
+    <div class="col-md-10 text-center flex-column animate"
+         style="padding: 39px;">
+         <fa-icon [icon]="['far','spinner']" [spin]="true" *ngIf="busy"></fa-icon>
+         <p-table [value]="transactions" [responsive]="true"
+                  dataKey="transactionIndex" class="overview-table flex-column"
+                  [rows]="12">
+           <ng-template pTemplate="header">
+             <tr>
+               <th [pSortableColumn]="'timeStamp'">
+                 Date
+                 <p-sortIcon [field]="'date'"></p-sortIcon>
+               </th>
+               <th>
+                 To
+               </th>
+               <th>
+                 Value
+               </th>
+             </tr>
+           </ng-template>
+           <ng-template pTemplate="summary">
+             <ng-container *ngIf="transactionCount === 0">
+               No transactions yet
+             </ng-container>
+           </ng-template>
+           <ng-template pTemplate="body" let-item let-expanded="expanded">
+             <tr [pSelectableRow]="item" class="tr-canexpand" [pRowToggler]="item">
+               <td>
+                 {{moment.unix(item.timeStamp).format('DD/MM/YYYY H:mm:ss')}} (UTC)
+               </td>
+               <td>
+                 {{item.to}}
+               </td>
+               <td>
+                 {{getValueTransaction(item.value)}}
+               </td>
+             </tr>
+           </ng-template>
+           <ng-template pTemplate="rowexpansion" let-item>
+             <tr class="tr-expanded">
+               <td colspan="3">
+                 <div class="row row-expanded">
+                   <div class="col-xs-1">
+                     <div class="vertical-line"></div>
+                   </div>
+                   <div class="col-xs-11 text-left">
+                     <div>
+                       <span class="blue">From: </span>
+                       <a (click)="openTX(item.id)" pTooltip="Open on explorer" style="cursor: pointer;">
+                         {{item.from}}
+                       </a>
+                     </div>
+                     <div>
+                       <span class="blue">To: </span>
+                       <a (click)="openTX(item.id)" pTooltip="Open on explorer" style="cursor: pointer;">
+                         {{item.to}}
+                       </a>
+                     </div>
+                     <div>
+                       <span class="blue">Block: </span>
+                         {{item.blockNumber}}
+                     </div>
+                     <div>
+                       <span class="blue">Block Hash: </span>
+                         {{item.blockHash}}
+                     </div>
+                     <div>
+                       <span class="blue">Confirmations: </span>
+                         {{item.confirmations}}
+                     </div>
+                     <div>
+                       <span class="blue">Gas: </span>
+                         {{item.gas}}
+                     </div>
+                     <div>
+                       <span class="blue">Gas Price: </span>
+                         {{item.gasPrice}}
+                     </div>
+                     <div>
+                       <span class="blue">Gas Used: </span>
+                         {{item.gasUsed}}
+                     </div>
+                   </div>
+                 </div>
+               </td>
+             </tr>
+           </ng-template>
+         </p-table>
+    </div>
+  </div>
+</div>

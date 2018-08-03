@@ -1,4 +1,5 @@
 /deep/ body {
+    color: #ffffff;
     overflow-y: auto !important;
 }
 
@@ -6,7 +7,8 @@
     display: flex;
     min-height: 100vh;
     flex-direction: column;
-    background-image: url("../../assets/bg2.jpg");
+    background-color: #2B2F4A;
+    background-image: url("../../assets/images/header_banner.jpg");
     background-size: cover;
 }
 

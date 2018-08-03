@@ -1,4 +1,5 @@
 /deep/ body {
+  color: #ffffff;
   overflow-y: auto !important;
 }
 
@@ -6,7 +7,9 @@
   display: flex;
   min-height: 100vh;
   flex-direction: column;
-  background-image: url("../../assets/bg2.jpg");
+  /**background-image: url("../../assets/bg2.jpg");**/
+  background-color: #2B2F4A;
+  background-image: url("../../assets/images/header_banner.jpg");
   background-size: cover;
 }
 
@@ -90,7 +93,8 @@
 
 .info {
   font-size: 18px;
-  color: #696969;
+  /**color: #696969;**/
+  color: #ffffff;
 }
 
 .public-input {
@@ -179,7 +183,7 @@
 
 .advanced {
   font-size: 14px;
-  color: #696969;
+  /**color: #696969;**/
 }
 
 .warn {
@@ -193,4 +197,8 @@
 #textarea {
     background: #b1b1b1;
     border: 2px solid #065e8d;
+}
+
+.mat-hint {
+    color: #b1b1b1 !important;
 }

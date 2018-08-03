@@ -17,6 +17,11 @@ import {WalletComponent} from './dashboard/wallet/wallet.component';
 import {HistoryComponent} from './dashboard/history/history.component';
 import {VoteComponent} from './dashboard/vote/vote.component';
 import {SendComponent} from './dashboard/send/send.component';
+import {EvoDashboardComponent} from './tokens/evo/dashboard/dashboard.component'; // Adrian
+import {EosLandingComponent} from './dashboard/landing/landing.component'; // Adrian (Issue - 11)
+import {EvoLandingComponent} from './tokens/evo/dashboard/landing/landing.component'; // Adrian (Issue - 11)
+import {EvoWalletComponent} from './tokens/evo/dashboard/wallet/wallet.component'; // Adrian (Issue - 11)
+import {EvoSendComponent} from './tokens/evo/dashboard/send/send.component'; // Adrian (Issue - 11)
 import {
   MatAutocompleteModule,
   MatCheckboxModule,
@@ -57,7 +62,12 @@ library.add(far, fas, fab, fal);
     ConfigComponent,
     AboutComponent,
     LockscreenComponent,
-    RamMarketComponent
+    RamMarketComponent,
+    EvoDashboardComponent, // Adrian
+    EosLandingComponent, // Adrian (Issue - 11)
+    EvoLandingComponent, // Adrian (Issue - 11)
+    EvoWalletComponent, // Adrian (Issue - 11)
+    EvoSendComponent, // Adrian (Issue - 11)
   ],
   imports: [
     AccordionModule,

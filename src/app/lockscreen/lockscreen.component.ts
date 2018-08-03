@@ -35,7 +35,8 @@ export class LockscreenComponent implements OnInit {
 
     ngOnInit() {
         if (localStorage.getItem('simpleos-hash') === null) {
-            this.router.navigate(['landing']).catch(() => {
+            // Adrian (Issue - 11): Change redirect to new EOS Landing page
+            this.router.navigate(['/dashboard/landing']).catch(() => {
                 alert('cannot navigate :(');
             });
         }
@@ -47,7 +48,7 @@ export class LockscreenComponent implements OnInit {
     }
 
     unlock() {
-        let target = ['landing'];
+        let target = ['dashboard/landing']; // Adrian (11): Redirect to this landing page
         if (this.network.networkingReady.getValue()) {
             target = ['dashboard', 'wallet'];
         }

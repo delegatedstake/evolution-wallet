@@ -137,7 +137,8 @@
 
 .tr-canexpand:hover {
     cursor: pointer;
-    background-color: #272727 !important;
+    /**background-color: #272727 !important;**/
+    background-color: transparent !important;
     -webkit-transition-duration: 0.3s;
     transition-duration: 0.3s;
     -webkit-transition-property: background-color;
@@ -235,4 +236,16 @@ a:visited {
 
 /deep/ .map .ui-accordion-header>a {
     padding: .5rem .75rem !important;
+}
+
+.card-block:last-child, .card-header:last-child {
+    background: #27314C;
+}
+
+/deep/ .bps-table .ui-table .ui-table-tbody>tr>td {
+    background: #27314C;
+}
+
+/deep/ .bps-table .ui-table .ui-table-caption {
+    background: #27314C;
 }

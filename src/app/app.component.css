@@ -29,3 +29,7 @@
     from {bottom: -10px; opacity: 0;}
     to {bottom: 0; opacity: 1;}
 }
+
+[hidden] {
+    display: none !important;
+}

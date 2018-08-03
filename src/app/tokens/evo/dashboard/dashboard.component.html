@@ -1,0 +1,79 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+<div class="main-container">
+  <div class="header">
+    <div class="container">
+      <div class="topMenu">
+        <ul>
+          <li><a style="color: #fdfffe; border-bottom: 2px solid #fff; padding-bottom: 15px;" class="" routerLinkActive="active" [routerLink]="['/dashboard/wallet']">Wallet</a></li>
+          <li><a href="">Exchange</a></li>
+          <li><a href="">Development</a></li>
+        </ul>
+      </div>
+	  <div class="rightIconLink">
+
+      </div>
+    </div>
+  </div>
+
+  <div class="content-container">
+    <div class="content-area">
+      <div class="row" style="margin-right: 0;">
+
+      </div>
+
+      <div class="selected-token">
+        <div class="col-md-10">
+          <span class="selected-token-image" *ngIf="privateKeyImported">
+            <img src="../../../../assets/images/{{selectedToken['logo']}}" />
+          </span>
+          <!--<span class="selected-token-name">
+            EVO
+          </span>-->
+        </div>
+        <div class="col-md-2">
+          &nbsp;
+        </div>
+      </div>
+      <div *ngIf="privateKeyImported" class="token-menu-container">
+        <div class="col-md-10 token-menu">
+          <span class="radius-left">
+            <a class="" routerLinkActive="active" [routerLink]="['/token/evo/dashboard/wallet/', symbol]">
+              <fa-icon [icon]="['far', 'history']"></fa-icon>&nbsp;&nbsp;HISTORY
+            </a>
+          </span>
+          <span class="">
+            <a class="" routerLinkActive="active" [routerLink]="['/token/evo/dashboard/send', symbol]">
+              <fa-icon [icon]="['far', 'paper-plane']"></fa-icon>&nbsp;&nbsp;SEND
+            </a>
+          </span>
+        </div>
+        <div class="col-md-2">
+          &nbsp;
+        </div>
+      </div>
+      <div class="content">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    <nav class="sidenav">
+      <div style="margin-top:50px;">
+        &nbsp;
+      </div>
+      <section #sidenavContent class="sidenav-content">
+        <a *ngFor="let token of ethTokens.tokens; let i = index" class="nav-link" routerLinkActive="active" [routerLink]="['/token/evo/dashboard/wallet/', token.symbol]">
+           {{token.symbol}}
+        </a>
+        <a class="nav-link" routerLinkActivearn="active" [routerLink]="['/dashboard/wallet']">
+          EOS
+        </a>
+      </section>
+      <section class="placeholder border-r">
+        <!--<div class="credits">Made with
+          <fa-icon [icon]="['fas', 'heart']"></fa-icon>
+          by <a style="color: #d7d7d7;" [routerLink]="['about']">EOS Rio</a>
+        </div>-->
+        <div class="version">v0.1</div>
+      </section>
+    </nav>
+  </div>
+</div>

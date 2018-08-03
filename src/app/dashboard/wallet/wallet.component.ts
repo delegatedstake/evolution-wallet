@@ -1,6 +1,7 @@
 import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {AccountsService} from '../../accounts.service';
 import {EOSJSService} from '../../eosjs.service';
+import {Router} from '@angular/router';
 
 import * as moment from 'moment';
 
@@ -25,7 +26,7 @@ export class WalletComponent implements OnInit, AfterViewInit, OnDestroy {
     window['shell']['openExternal']('https://eosflare.io/tx/' + value);
   }
 
-  constructor(public aService: AccountsService, public eos: EOSJSService) {
+  constructor(public aService: AccountsService, public eos: EOSJSService, private router: Router,) {
     this.moment = moment;
     this.actions = [];
     this.tokens = [];
@@ -45,6 +46,13 @@ export class WalletComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
+      // Adrian (Issue - 11): Change redirect to new EOS Landing page if private key is not imported
+    if (localStorage.getItem('simpleos-hash') === null) {
+      this.router.navigate(['dashboard/landing']).catch(() => {
+        alert('cannot navigate :(');
+      });
+    }
+
     this.aService.lastUpdate.asObservable().subscribe(value => {
       if (value.account === this.aService.selected.getValue().name) {
         this.updateBalances();

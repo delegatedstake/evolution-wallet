@@ -1,0 +1,115 @@
+<toaster-container [toasterconfig]="config"></toaster-container>
+
+<div class="container-fluid" style="overflow:hidden;">
+  <div class="row flex-items-xs-between send-row">
+    <div class="col-md-7 text-center animate">
+      <fa-icon [icon]="['far','spinner']" [spin]="true" *ngIf="busy"></fa-icon>
+      <div class="content-area" style="padding-top: 0; overflow-x: hidden;">
+        <form [formGroup]="sendForm">
+          <div>
+            <mat-error align="start" *ngIf="errormsg !== ''">
+              {{transactionErrorMsg}}
+            </mat-error>
+            <mat-form-field class="field-width" style="margin-top: 12px; margin-bottom: 12px">
+              <input #toAccount matInput type="text" formControlName="to"
+                     placeholder="Send to (address)" class="text-lowercase"
+                     (blur)="checkAddress();">
+              <mat-error align="start" *ngIf="errormsg !== ''">
+                {{errormsg}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="field-width">
+              <input matInput formControlName="amount" [textMask]="{mask: numberMask}" type="text"
+                     placeholder="Amount ({{ symbol }})" (blur)="checkAmount();">
+              <button mat-button matSuffix mat-icon-button class="btn btn-inverse btn-sm btn-max"
+                      (click)="setMax()">
+                MAX
+              </button>
+              <mat-error align="start" *ngIf="amounterror !== ''">
+                {{amounterror}}
+              </mat-error>
+            </mat-form-field>
+            <mat-form-field class="field-width" *ngIf="sendForm.value.showGasLimit === true">
+              <input matInput formControlName="gasLimit" [textMask]="{mask: numberMask}" type="text"
+                     placeholder="Gas Limit" (blur)="checkGasLimit();">
+              <mat-error align="start" *ngIf="gasLimitError !== ''">
+                {{gasLimitError}}
+              </mat-error>
+            </mat-form-field>
+            <mat-checkbox formControlName="showGasLimit">Modify Gas Limit</mat-checkbox>
+          </div>
+          <button class="btn btn-block btn-info-outline" (click)="openSendModal()"
+                  [disabled]="!sendForm.valid">
+            <fa-icon [icon]="['far', 'paper-plane']"></fa-icon>&nbsp;&nbsp;SEND
+          </button>
+          <!--
+          <button class="btn btn-block btn-info-outline" (click)="transfer()"
+                  [disabled]="!sendForm.valid">
+            <fa-icon [icon]="['far', 'paper-plane']"></fa-icon>&nbsp;&nbsp;SEND
+          </button>
+          -->
+        </form>
+      </div>
+    </div>
+    <div class="col-md-5">
+        <div class="">
+            <div class="wallet_info_label">Wallet Address: </div>
+            <div class="wallet_info_container">
+                <span class="wallet_info_value">
+                    {{ fromAccount }}
+                </span>
+            </div>
+        </div>
+        <div class="">
+            <div class="wallet_info_label">Wallet Balance: </div>
+            <div class="wallet_info_container">
+                <span class="wallet_info_value">
+                    {{ token_balance }}
+                </span>
+            </div>
+        </div>
+        <div class="">
+            <div class="wallet_info_label">Current Gas Price: </div>
+            <div class="wallet_info_container">
+                <span class="wallet_info_value">
+                    {{ gasPrice }}
+                </span>
+            </div>
+        </div>
+        <div class="">
+            <div class="wallet_info_label">Transaction Cost: </div>
+            <div class="wallet_info_container">
+                <span class="wallet_info_value">
+                    {{ transactionCost }}
+                </span>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<clr-modal [(clrModalOpen)]="sendModal">
+  <h3 class="modal-title text-white"><span class="blue">{{ fromAccount }}</span> sends <span class="blue">{{ sendForm.value.amount | number : '1.2-4' }} {{token}}</span>
+    to
+  </h3>
+  <div class="modal-body">
+    <h4 class="blue" style="margin-bottom: 10px;">{{ sendForm.value.to }}</h4>
+    <div>Are you sure you want to submit this transaction?</div>
+  </div>
+  <div class="modal-footer">
+    <form [formGroup]="confirmForm" class="confirmForm">
+      <mat-form-field>
+        <input matInput #pass type="password" (keyup.enter)="transfer()" placeholder="Password" formControlName="pass">
+        <mat-hint class="error" align="start" *ngIf="wrongpass !== ''">
+          {{wrongpass}}
+        </mat-hint>
+        <br clear="all"/>
+      </mat-form-field>
+      <button type="button" class="btn btn-info-outline" style="margin-top: 12px;" (click)="transfer()"
+              [disabled]="!confirmForm.valid || busy">
+        Confirm
+        <fa-icon [icon]="['far','spinner']" [spin]="true" *ngIf="busy"></fa-icon>
+      </button>
+    </form>
+  </div>
+</clr-modal>

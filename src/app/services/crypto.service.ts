@@ -100,6 +100,24 @@ export class CryptoService {
     localStorage.setItem('eos_keys.' + this.eosjs.chainID, JSON.stringify(store));
   }
 
+  /**
+   * Adrian (Issue - 11): Encrypt and Store function that accepts a custom key
+   */
+  async encryptAndStore2(data, publickey, key): Promise<void> {
+    const encryptedData = await this.encrypt(data);
+    console.log(encryptedData);
+    let store = {};
+    const oldData = JSON.parse(localStorage.getItem(key));
+    console.log(oldData);
+    if (oldData) {
+      store = oldData;
+    }
+    store[publickey] = {
+      private: this.bufferToBase64(encryptedData)
+    };
+    localStorage.setItem(key, JSON.stringify(store));
+  }
+
   private async encrypt(data): Promise<Uint8Array> {
     const compressed = this.textEncoder.encode(JSON.stringify(data));
     const initializationVector = new Uint8Array(this.ivLen);
@@ -153,6 +171,37 @@ export class CryptoService {
         }, this.masterKey, data);
         this.eosjs.baseConfig.keyProvider.push(String.fromCharCode.apply(null, new Uint8Array(decrypted)).replace(/"/g, ''));
         this.eosjs.reloadInstance();
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * Adrian (Issue - 11): Decrypt function that allows a custom
+   * key to be submitted.
+   */
+  async decryptKeys2(publickey, key): Promise<boolean> {
+    const store = JSON.parse(localStorage.getItem(key));
+    if (store) {
+      const payload = store[publickey]['private'];
+      if (payload) {
+        const encryptedData = this.base64ToBuffer(payload);
+        const iv = encryptedData.slice(0, this.ivLen);
+        const data = encryptedData.slice(this.ivLen);
+        /**setTimeout(() => {
+          this.eosjs.clearInstance();
+      }, 5000);**/
+        const decrypted = await crypto.subtle.decrypt({
+          name: 'AES-GCM',
+          iv: iv
+        }, this.masterKey, data);
+        console.log(decrypted);
+        /**this.eosjs.baseConfig.keyProvider.push(String.fromCharCode.apply(null, new Uint8Array(decrypted)).replace(/"/g, ''));
+        this.eosjs.reloadInstance();**/
         return true;
       } else {
         return false;

@@ -10,6 +10,7 @@ import * as moment from 'moment';
 import {CryptoService} from '../services/crypto.service';
 import {RamService} from '../services/ram.service';
 import {createNumberMask} from 'text-mask-addons/dist/textMaskAddons';
+import {EthTokensService} from '../services/eth-tokens.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -61,6 +62,8 @@ export class DashboardComponent implements OnInit {
   confirmationID = '';
   success = false;
 
+  selectedOption = 0; // Adrian ()
+
   delegateForm: FormGroup;
   submitTXForm: FormGroup;
   wrongwalletpass = '';
@@ -79,13 +82,16 @@ export class DashboardComponent implements OnInit {
     includeThousandsSeparator: false
   });
 
+  privateKeyImported: boolean; // Adrian (Issue - 11)
+
   constructor(
     public eos: EOSJSService,
     private fb: FormBuilder,
     public aService: AccountsService,
     private toaster: ToasterService,
     private crypto: CryptoService,
-    public ram: RamService
+    public ram: RamService,
+    public ethTokens: EthTokensService, // Adrian ()
   ) {
     this.newAccountModal = false;
     this.appVersion = window['appversion'];
@@ -111,6 +117,12 @@ export class DashboardComponent implements OnInit {
       autoplay: true,
       loop: false
     };
+
+    // Adrian (Issue - 11): Figure out if the user has imported an EOS private key
+    this.privateKeyImported = true;
+    if (localStorage.getItem('simpleos-hash') === null) {
+        this.privateKeyImported = false;
+    }
   }
 
   openTXID() {
@@ -266,7 +278,14 @@ export class DashboardComponent implements OnInit {
   }
 
   selectAccount(idx) {
+    console.log(idx);
     this.aService.select(idx);
+  }
+
+  // Adrian (): Changed to a select list and value returned in a different format
+  selectAccount2(idx) {
+    console.log(idx);
+    this.aService.select(idx.value);
   }
 
   loadStoredAccounts() {

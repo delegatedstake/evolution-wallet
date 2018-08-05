@@ -120,7 +120,11 @@ export class DashboardComponent implements OnInit {
 
     // Adrian (Issue - 11): Figure out if the user has imported an EOS private key
     this.privateKeyImported = true;
-    if (localStorage.getItem('simpleos-hash') === null) {
+    const chain_id = this.eos.chainID;
+    console.log('Chain ID 3: ' + chain_id);
+    console.log('EOS Keys 3: ' + localStorage.getItem('eos_keys.' + chain_id));
+    //if (localStorage.getItem('simpleos-hash') === null) {
+    if (localStorage.getItem('eos_keys.' + chain_id) === null) {
         this.privateKeyImported = false;
     }
   }

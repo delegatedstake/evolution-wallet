@@ -156,6 +156,15 @@ export class EosLandingComponent implements OnInit {
   }
 
   ngOnInit() {
+    const chain_id = this.eos.chainID;
+    console.log('Chain ID 2: ' + this.eos);
+    console.log('EOS Keys 2: ' + localStorage.getItem('eos_keys.' + chain_id));
+    if (localStorage.getItem('eos_keys.' + chain_id) !== null) {
+      this.router.navigate(['/dashboard/wallet']).catch(() => {
+        alert('cannot navigate :(');
+      });
+    }
+
     setTimeout(() => {
       this.anim.pause();
     }, 10);
@@ -213,13 +222,13 @@ export class EosLandingComponent implements OnInit {
         this.eos.ecc['randomKey'](128).then((privateKey) => {
           this.ownerpk = privateKey;
           this.ownerpub = this.eos.ecc['privateToPublic'](this.ownerpk);
-          console.log(this.ownerpk, this.ownerpub);
+          //console.log(this.ownerpk, this.ownerpub);
           this.eos.ecc['randomKey'](128).then((privateKey2) => {
             this.activepk = privateKey2;
             this.activepub = this.eos.ecc['privateToPublic'](this.activepk);
             this.generating = false;
             this.generated = true;
-            console.log(this.activepk, this.activepub);
+            //console.log(this.activepk, this.activepub);
           });
         });
       });

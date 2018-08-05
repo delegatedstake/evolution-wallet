@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {CryptoService} from '../services/crypto.service';
 import {Router} from '@angular/router';
 import {NetworkService} from '../network.service';
+import {EOSJSService} from '../eosjs.service';
 
 @Component({
     selector: 'app-lockscreen',
@@ -23,7 +24,10 @@ export class LockscreenComponent implements OnInit {
         window['remote']['app'].exit(0);
     }
 
-    constructor(private crypto: CryptoService, private router: Router, private network: NetworkService) {
+    constructor(private crypto: CryptoService,
+        public eos: EOSJSService,
+        private router: Router,
+        private network: NetworkService) {
         this.logoutModal = false;
         this.clearContacts = false;
         this.lottieConfig = {
@@ -34,7 +38,10 @@ export class LockscreenComponent implements OnInit {
     }
 
     ngOnInit() {
-        if (localStorage.getItem('simpleos-hash') === null) {
+        const chain_id = this.eos.chainID;
+        console.log('Chain ID: ' + chain_id);
+        console.log('EOS Keys: ' + localStorage.getItem('eos_keys.' + chain_id));
+        if (localStorage.getItem('eos_keys.' + chain_id) === null) {
             // Adrian (Issue - 11): Change redirect to new EOS Landing page
             this.router.navigate(['/dashboard/landing']).catch(() => {
                 alert('cannot navigate :(');

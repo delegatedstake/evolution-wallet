@@ -46,11 +46,14 @@ export class WalletComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit() {
-      // Adrian (Issue - 11): Change redirect to new EOS Landing page if private key is not imported
-    if (localStorage.getItem('simpleos-hash') === null) {
-      this.router.navigate(['dashboard/landing']).catch(() => {
+    // Adrian (Issue - 11): Change redirect to new EOS Landing page if private key is not imported
+    const chain_id = this.eos.chainID;
+    console.log('Chain ID 4: ' + this.eos);
+    console.log('EOS Keys 4: ' + localStorage.getItem('eos_keys.' + chain_id));
+    if (localStorage.getItem('eos_keys.' + chain_id) === null) {
+      /**this.router.navigate(['dashboard/landing']).catch(() => {
         alert('cannot navigate :(');
-      });
+      });**/
     }
 
     this.aService.lastUpdate.asObservable().subscribe(value => {

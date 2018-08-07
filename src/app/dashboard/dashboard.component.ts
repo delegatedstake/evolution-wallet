@@ -11,6 +11,7 @@ import {CryptoService} from '../services/crypto.service';
 import {RamService} from '../services/ram.service';
 import {createNumberMask} from 'text-mask-addons/dist/textMaskAddons';
 import {EthTokensService} from '../services/eth-tokens.service';
+import {Router, ActivatedRoute, NavigationEnd} from '@angular/router'; // Adrian
 
 @Component({
   selector: 'app-dashboard',
@@ -92,6 +93,7 @@ export class DashboardComponent implements OnInit {
     private crypto: CryptoService,
     public ram: RamService,
     public ethTokens: EthTokensService, // Adrian ()
+    private router: Router // Adrian
   ) {
     this.newAccountModal = false;
     this.appVersion = window['appversion'];
@@ -120,13 +122,29 @@ export class DashboardComponent implements OnInit {
 
     // Adrian (Issue - 11): Figure out if the user has imported an EOS private key
     this.privateKeyImported = true;
-    const chain_id = this.eos.chainID;
+    let chain_id = this.eos.chainID;
     console.log('Chain ID 3: ' + chain_id);
     console.log('EOS Keys 3: ' + localStorage.getItem('eos_keys.' + chain_id));
     //if (localStorage.getItem('simpleos-hash') === null) {
     if (localStorage.getItem('eos_keys.' + chain_id) === null) {
         this.privateKeyImported = false;
     }
+
+    this.router.events.subscribe((e: any) => {
+      // Adrian (): Re-initalise values if the URL is changed
+      if (e instanceof NavigationEnd) {
+        chain_id = this.eos.chainID;
+        // This is needed in order to show the Inner Menu when redirecting from the landing page
+        console.log('Chain ID 5: ' + chain_id);
+        console.log('EOS Keys 5: ' + localStorage.getItem('eos_keys.' + chain_id));
+        //if (localStorage.getItem('simpleos-hash') === null) {
+        if (localStorage.getItem('eos_keys.' + chain_id) === null) {
+            this.privateKeyImported = false;
+        } else {
+            this.privateKeyImported = true;
+        }
+      }
+    });
   }
 
   openTXID() {

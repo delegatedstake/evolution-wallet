@@ -10,7 +10,13 @@
         </ul>
       </div>
 	  <div class="rightIconLink">
-
+        <div class="col-xs-auto col-md-auto" style="padding-left: 0; padding-right: 0; float: left;">
+          <div class="" [routerLink]="['/dashboard/config']">
+            <div style="cursor: pointer;">
+              <fa-icon [icon]="['fal', 'cog']" size="lg"></fa-icon>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -63,7 +69,7 @@
         <a *ngFor="let token of ethTokens.tokens; let i = index" class="nav-link" routerLinkActive="active" [routerLink]="['/token/evo/dashboard/wallet/', token.symbol]">
            {{token.symbol}}
         </a>
-        <a class="nav-link" routerLinkActivearn="active" [routerLink]="['/dashboard/wallet']">
+        <a class="nav-link" routerLinkActivearn="active" [routerLink]="['/dashboard/landing']">
           EOS
         </a>
       </section>

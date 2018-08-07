@@ -303,3 +303,7 @@ img {
 .mat-form-field-infix {
     border-top: 0;
 }
+
+.select_account {
+    display: inline-block;
+}

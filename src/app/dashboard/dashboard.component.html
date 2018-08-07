@@ -12,7 +12,7 @@
 	  <div class="rightIconLink">
         <div *ngIf="privateKeyImported" class="col-xs-auto col-md-auto" style="padding-left: 0; padding-right: 10px; float: left; position: relative; top: -10px;">
           <span style="padding-right: 10px;">Accounts:</span>
-          <mat-form-field>
+          <mat-form-field style="display:inline-block !important" class="select_account">
             <mat-select (selectionChange)="selectAccount2($event)" [(ngModel)]="selectedOption">
               <mat-option *ngFor="let account of aService.accounts; let i = index" [value]="i">
                 {{account.name}}
@@ -28,7 +28,7 @@
           </div>
         </div>
         <div class="col-xs-auto col-md-auto" style="padding-left: 0; padding-right: 0; float: left;">
-          <div class="" [routerLink]="['config']">
+          <div class="" [routerLink]="['/dashboard/config']">
             <div style="cursor: pointer;">
               <fa-icon [icon]="['fal', 'cog']" size="lg"></fa-icon>
             </div>
@@ -124,7 +124,7 @@
         <a *ngFor="let token of ethTokens.tokens; let i = index" class="nav-link" routerLinkActive="active" [routerLink]="['/token/evo/dashboard/wallet/', token.symbol]">
           {{token.symbol}}
         </a>
-        <a class="nav-link" style="border-right:8px solid #258de6;color: #258de6;" routerLinkActive="active" [routerLink]="['wallet']">
+        <a class="nav-link" style="border-right:8px solid #258de6;color: #258de6;" routerLinkActive="active" [routerLink]="['landing']">
           EOS
         </a>
       </section>

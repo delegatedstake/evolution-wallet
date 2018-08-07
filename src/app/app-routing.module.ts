@@ -65,7 +65,8 @@ const routes: Routes = [
         path: 'about',
         component: AboutComponent,
       }
-    ]
+    ],
+    runGuardsAndResolvers: 'always'
   },
   // Adrian ()
   {

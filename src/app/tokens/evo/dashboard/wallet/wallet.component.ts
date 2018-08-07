@@ -23,10 +23,10 @@ export class EvoWalletComponent {
   busy: boolean;
 
   constructor(private router: Router,
-      private ethTokens: EthTokensService,
-      private toaster: ToasterService,
-      private http: HttpClient,
-      private activeRoute: ActivatedRoute) {
+    private ethTokens: EthTokensService,
+    private toaster: ToasterService,
+    private http: HttpClient,
+    private activeRoute: ActivatedRoute) {
 
     if (localStorage.getItem('eth-private-key') === null) {
       // Adrian (Issue - 11): Private key not yet imported
@@ -39,10 +39,9 @@ export class EvoWalletComponent {
     this.busy = false;
 
     this.router.events.subscribe((e: any) => {
-      // If it is a NavigationEnd event re-initalise the component
       if (e instanceof NavigationEnd) {
         this.transactions = [];
-        this.initializeComponent(); // Instead of calling ngOnInit() because need to reload page when parameter changes
+        this.initializeComponent();
       }
     });
   }
@@ -58,13 +57,15 @@ export class EvoWalletComponent {
     }
 
     let privateKey = localStorage.getItem('eth-private-key');
-    if(privateKey.substring(0, 2) !== '0x') {
-      privateKey = "0x" + privateKey;
-    }
-    let wallet = new ethers.Wallet(privateKey);
-    this.publicAddress = wallet.address;
+    if(privateKey !== null) {
+      if(privateKey.substring(0, 2) !== '0x') {
+        privateKey = "0x" + privateKey;
+      }
+      let wallet = new ethers.Wallet(privateKey);
+      this.publicAddress = wallet.address;
 
-    this.getTransactionsHistory();
+      this.getTransactionsHistory();
+    }
   }
 
   /**

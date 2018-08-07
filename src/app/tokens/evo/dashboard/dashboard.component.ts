@@ -16,7 +16,6 @@ import {EthTokensService} from '../../../services/eth-tokens.service';
 })
 //export class EvoDashboardComponent implements OnInit {
 export class EvoDashboardComponent {
-
   transactions: Object;
   transactionCount = 0;
   moment: any;
@@ -24,42 +23,34 @@ export class EvoDashboardComponent {
   selectedToken: Object;
   publicAddress: string;
   config: ToasterConfig;
-
   privateKeyImported: boolean; // Adrian (Issue - 11)
 
   constructor(private http: HttpClient,
-      private fb: FormBuilder,
-      private toaster: ToasterService,
-      private activeRoute: ActivatedRoute,
-      public ethTokens: EthTokensService,
-      private router: Router) {
+    private fb: FormBuilder,
+    private toaster: ToasterService,
+    private activeRoute: ActivatedRoute,
+    public ethTokens: EthTokensService,
+    private router: Router) {
 
     // Adrian (Issue - 11): Figure out if the user has imported an ETH private key
-    this.privateKeyImported = true;
-    if (localStorage.getItem('eth-private-key') === null) {
-        this.privateKeyImported = false;
+    this.privateKeyImported = false;
+    if (localStorage.getItem('eth-private-key') !== null) {
+      this.privateKeyImported = true;
     }
 
     this.moment = moment;
+    this.publicAddress = '';
 
     this.router.events.subscribe((e: any) => {
-      // If it is a NavigationEnd event re-initalise the component
+      // If the URL paramter is changed this event will be called to re-initalise the component
       if (e instanceof NavigationEnd) {
-        console.log('This is just annoying');
-        this.initializeComponent(); // Instead of calling ngOnInit() because need to reload page when parameter changes
+        this.initializeComponent();
       }
     });
   }
 
   //ngOnInit() {
   initializeComponent() {
-    if (localStorage.getItem('eth-private-key') === null) {
-      // Adrian (Issue - 11): Private key not yet imported
-      this.router.navigate(['/token/evo/dashboard/landing']).catch(() => {
-          alert('cannot navigate :(');
-      });
-    }
-
     //this.symbol = this.activeRoute.snapshot.params.symbol;
     /**
      * activeRoute is only able to access the parent route that called
@@ -76,14 +67,15 @@ export class EvoDashboardComponent {
       }
     }
 
-    //this.getTransactionsHistory();
-    let key = 'eth-private-key';
-    let privateKey = localStorage.getItem(key);
-    //if(privateKey != '') {
-        let wallet = new ethers.Wallet(privateKey);
-        wallet.provider = ethers.providers.getDefaultProvider();
-        this.publicAddress = wallet.address;
-    //}
+    let privateKey = localStorage.getItem('eth-private-key');
+    if(privateKey === null) {
+        this.privateKeyImported = false;
+    } else {
+      let wallet = new ethers.Wallet(privateKey);
+      wallet.provider = ethers.providers.getDefaultProvider();
+      this.publicAddress = wallet.address;
+      this.privateKeyImported = true;
+    }
   }
 
   selectAccount(idx) {

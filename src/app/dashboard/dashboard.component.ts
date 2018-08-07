@@ -123,21 +123,15 @@ export class DashboardComponent implements OnInit {
     // Adrian (Issue - 11): Figure out if the user has imported an EOS private key
     this.privateKeyImported = true;
     let chain_id = this.eos.chainID;
-    console.log('Chain ID 3: ' + chain_id);
-    console.log('EOS Keys 3: ' + localStorage.getItem('eos_keys.' + chain_id));
-    //if (localStorage.getItem('simpleos-hash') === null) {
     if (localStorage.getItem('eos_keys.' + chain_id) === null) {
-        this.privateKeyImported = false;
+      this.privateKeyImported = false;
     }
 
     this.router.events.subscribe((e: any) => {
       // Adrian (): Re-initalise values if the URL is changed
       if (e instanceof NavigationEnd) {
         chain_id = this.eos.chainID;
-        // This is needed in order to show the Inner Menu when redirecting from the landing page
-        console.log('Chain ID 5: ' + chain_id);
-        console.log('EOS Keys 5: ' + localStorage.getItem('eos_keys.' + chain_id));
-        //if (localStorage.getItem('simpleos-hash') === null) {
+        // Adrian (): This is needed in order to show the Inner Menu when redirecting from the landing page
         if (localStorage.getItem('eos_keys.' + chain_id) === null) {
             this.privateKeyImported = false;
         } else {
@@ -264,12 +258,17 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit() {
     this.accounts = [];
-    this.ram.reload();
-    this.eos.status.asObservable().subscribe((status) => {
-      if (status) {
-        this.loadStoredAccounts();
-      }
-    });
+    // Adrian (): Correct error where the user has yet to import private key
+    let chain_id = this.eos.chainID;
+    if (localStorage.getItem('eos_keys.' + chain_id) !== null) {
+      this.ram.reload();
+      this.eos.status.asObservable().subscribe((status) => {
+        if (status) {
+          this.loadStoredAccounts();
+        }
+      });
+    }
+
   }
 
   decodeAccountPayload(payload: string) {

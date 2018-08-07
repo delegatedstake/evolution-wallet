@@ -22,73 +22,72 @@ export class EvoLandingComponent implements OnInit {
         private crypto: CryptoService,
         private toaster: ToasterService,
     ) {
-        this.importForm = this.fb.group({
-          privateKey: ['', Validators.required],
-        });
+      this.importForm = this.fb.group({
+        privateKey: ['', Validators.required],
+      });
     }
 
     ngOnInit() {
-        if (localStorage.getItem('eth-private-key') !== null) {
-            // Adrian (Issue - 11): Private key was imported so redirect to dashboard
-            this.router.navigate(['/token/evo/dashboard/wallets/eth']).catch(() => {
-                alert('cannot navigate :(');
-            });
-        }
+      if (localStorage.getItem('eth-private-key') !== null) {
+        // Adrian (Issue - 11): Private key was imported so redirect to dashboard
+        this.router.navigate(['/token/evo/dashboard/wallets/eth']).catch(() => {
+          alert('cannot navigate :(');
+        });
+      }
     }
 
     importPrivateKey() {
-        let key = 'eth-private-key';
+      let key = 'eth-private-key';
+      this.privateKey = this.importForm.get('privateKey').value;
 
-        this.privateKey = this.importForm.get('privateKey').value;
+      if(this.privateKey.length != 64) {
+        this.importForm.controls['privateKey'].setErrors({'incorrect': true});
+        this.errormsg = 'Invalid private key';
+        this.showToast('danger', 'Invalid private key.', 'The private key must have a length of 64 alphanumeric characters.');
+      } else {
+        if (this.privateKey.substring(0, 2) !== '0x') {
+          this.privateKey = '0x' + this.privateKey;
+        }
 
-        if(this.privateKey.length != 64) {
+        try {
+          let wallet = new ethers.Wallet(this.privateKey);
+          wallet.provider = new ethers.providers.getDefaultProvider();
+
+          localStorage.setItem(key, this.privateKey);
+          this.showToast('success', 'Private key has been successfully imported.', 'Please save you private key in a safe place.');
+
+          this.importForm.controls['privateKey'].setErrors(null);
+          this.errormsg = '';
+
+          this.router.navigate(['/token/evo/dashboard/wallet/eth']).catch(() => {
+            alert('cannot navigate :(');
+          });
+        } catch(error) {
           this.importForm.controls['privateKey'].setErrors({'incorrect': true});
           this.errormsg = 'Invalid private key';
-          this.showToast('danger', 'Invalid private key.', 'The private key must have a length of 64 alphanumeric characters.');
-        } else {
-          if (this.privateKey.substring(0, 2) !== '0x') {
-            this.privateKey = '0x' + this.privateKey;
-          }
-
-          try {
-            let wallet = new ethers.Wallet(this.privateKey);
-            wallet.provider = new ethers.providers.getDefaultProvider();
-
-            localStorage.setItem(key, this.privateKey);
-            this.showToast('success', 'Private key has been successfully imported.', 'Please save you private key in a safe place.');
-
-            this.importForm.controls['privateKey'].setErrors(null);
-            this.errormsg = '';
-
-            this.router.navigate(['/token/evo/dashboard/wallet/eth']).catch(() => {
-                alert('cannot navigate :(');
-            });
-          } catch(error) {
-            this.importForm.controls['privateKey'].setErrors({'incorrect': true});
-            this.errormsg = 'Invalid private key';
-            this.showToast('danger', 'Invalid private key.', 'You entered an invalid private key2.');
-          }
+          this.showToast('danger', 'Invalid private key.', 'You entered an invalid private key2.');
         }
+      }
     }
 
     checkKey() {
-        let key = this.importForm.get('privateKey').value.toLowerCase();
+      let key = this.importForm.get('privateKey').value.toLowerCase();
 
-        if(key.length != 64) {
+      if(key.length != 64) {
+        this.importForm.controls['privateKey'].setErrors({'incorrect': true});
+        this.errormsg = 'Invalid private key';
+      } else {
+        try {
+          let wallet = new ethers.Wallet(key);
+          wallet.provider = new ethers.providers.getDefaultProvider(false);
+          this.importForm.controls['privateKey'].setErrors(null);
+          this.errormsg = 'Invalid private key';
+        } catch(error) {
           this.importForm.controls['privateKey'].setErrors({'incorrect': true});
           this.errormsg = 'Invalid private key';
-        } else {
-          try {
-            let wallet = new ethers.Wallet(key);
-            wallet.provider = new ethers.providers.getDefaultProvider(false);
-            this.importForm.controls['privateKey'].setErrors(null);
-            this.errormsg = 'Invalid private key';
-          } catch(error) {
-            this.importForm.controls['privateKey'].setErrors({'incorrect': true});
-            this.errormsg = 'Invalid private key';
-            this.showToast('danger', 'Invalid private key.', 'You entered an invalid private key.');
-          }
+          this.showToast('danger', 'Invalid private key.', 'You entered an invalid private key.');
         }
+      }
     }
 
     private showToast(type: string, title: string, body: string) {

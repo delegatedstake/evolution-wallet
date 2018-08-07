@@ -66,7 +66,7 @@ const routes: Routes = [
         component: AboutComponent,
       }
     ],
-    runGuardsAndResolvers: 'always'
+    runGuardsAndResolvers: 'paramsChange'
   },
   // Adrian ()
   {
@@ -87,7 +87,7 @@ const routes: Routes = [
         component: EvoSendComponent,
       },
     ],
-    runGuardsAndResolvers: 'always'
+    runGuardsAndResolvers: 'paramsChange'
   }
 ];
 

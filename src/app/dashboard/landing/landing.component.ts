@@ -157,21 +157,19 @@ export class EosLandingComponent implements OnInit {
 
   ngOnInit() {
     const chain_id = this.eos.chainID;
-    console.log('Chain ID 2: ' + this.eos);
-    console.log('EOS Keys 2: ' + localStorage.getItem('eos_keys.' + chain_id));
     if (localStorage.getItem('eos_keys.' + chain_id) !== null) {
       this.router.navigate(['/dashboard/wallet']).catch(() => {
         alert('cannot navigate :(');
       });
     }
 
-    setTimeout(() => {
+    /**setTimeout(() => {
       this.anim.pause();
     }, 10);
 
     setTimeout(() => {
       this.anim.play();
-    }, 900);
+    }, 900);**/
   }
 
   setPin(exodus) {

@@ -15,6 +15,7 @@ export class EthTokensService {
     this.tokens = [
       {symbol: 'ETH', decimals: 18, contractAddress: '', logo: 'eth_logo.png'},
       {symbol: 'EVO', decimals: 18, contractAddress: '0xefbd6d7def37ffae990503ecdb1291b2f7e38788', logo: 'evo_logo.png'},
+      {symbol: 'PRA', decimals: 18, contractAddress: '0x9041fe5b3fdea0f5e4afdc17e75180738d877a01', logo: 'prochain_logo.png'},
     ];
 
     this.abi = [

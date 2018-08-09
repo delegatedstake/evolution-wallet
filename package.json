@@ -1,13 +1,13 @@
 {
-  "name": "simpleos",
-  "version": "0.6.3",
-  "productName": "simpleos",
-  "description": "EOS Blockchain Interface & Wallet",
+  "name": "evolution-wallet",
+  "version": "1.0.0",
+  "productName": "Evolution Wallet",
+  "description": "Wallet Interface for EOS and EVO",
   "author": {
-    "name": "EOSRio",
-    "email": "contact@eosrio.io"
+    "name": "Evolution OS",
+    "email": "join@evolutionos.com"
   },
-  "repository": "https://github.com/eosrio/simpleos",
+  "repository": "https://github.com/EvolutionOS/evolution-wallet",
   "license": "MIT",
   "scripts": {
     "ng": "ng",
@@ -31,7 +31,7 @@
   "private": true,
   "main": "index.js",
   "build": {
-    "appId": "simpleos",
+    "appId": "evolution-wallet",
     "files": [
       "ng-dist",
       "index.js",
@@ -65,8 +65,8 @@
       "publish": [
         {
           "provider": "github",
-          "owner": "eosrio",
-          "repo": "simpleos"
+          "owner": "EvolutionOS",
+          "repo": "evolution-wallet"
         }
       ],
       "icon": "src/favicon.ico"

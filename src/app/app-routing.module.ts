@@ -16,6 +16,7 @@ import {EosLandingComponent} from './dashboard/landing/landing.component'; // Ad
 import {EvoLandingComponent} from './tokens/evo/dashboard/landing/landing.component'; // Adrian (Issue - 11)
 import {EvoWalletComponent} from './tokens/evo/dashboard/wallet/wallet.component'; // Adrian (Issue - 11)
 import {EvoSendComponent} from './tokens/evo/dashboard/send/send.component'; // Adrian (Issue - 11)
+import {ComingSoonComponent} from './dashboard/coming_soon/coming_soon.component';
 
 const routes: Routes = [
   {
@@ -36,6 +37,14 @@ const routes: Routes = [
       {
         path: 'landing',
         component: EosLandingComponent,
+      },
+      {
+        path: 'development_coming_soon',
+        component: ComingSoonComponent,
+      },
+      {
+        path: 'exchange_coming_soon',
+        component: ComingSoonComponent,
       },
       {
         path: 'wallet',
@@ -66,7 +75,7 @@ const routes: Routes = [
         component: AboutComponent,
       }
     ],
-    runGuardsAndResolvers: 'paramsChange'
+    runGuardsAndResolvers: 'always'
   },
   // Adrian ()
   {
@@ -87,7 +96,7 @@ const routes: Routes = [
         component: EvoSendComponent,
       },
     ],
-    runGuardsAndResolvers: 'paramsChange'
+    runGuardsAndResolvers: 'always'
   }
 ];
 

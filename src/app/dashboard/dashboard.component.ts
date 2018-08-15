@@ -84,6 +84,7 @@ export class DashboardComponent implements OnInit {
   });
 
   privateKeyImported: boolean; // Adrian (Issue - 11)
+  comingSoon: boolean;
 
   constructor(
     public eos: EOSJSService,
@@ -137,6 +138,19 @@ export class DashboardComponent implements OnInit {
         } else {
             this.privateKeyImported = true;
         }
+      }
+    });
+
+    // Adrian (): Set value to hide logo on coming soon page
+    this.comingSoon = false;
+    this.router.events.subscribe((e: any) => {
+      if (e instanceof NavigationEnd) {
+          let url = this.router.url.split('/', -1);
+          let lastParam = url[url.length - 1];
+
+          if(lastParam == 'exchange_coming_soon' || lastParam == 'development_coming_soon') {
+              this.comingSoon = true;
+          }
       }
     });
   }

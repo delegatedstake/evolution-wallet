@@ -4,9 +4,10 @@
 		<div class="container">
 			<div class="topMenu">
           <ul>
-            <li><a style="color: #fdfffe; border-bottom: 2px solid #fff; padding-bottom: 15px;" class="" routerLinkActive="active" [routerLink]="['/dashboard/landing']">Wallet</a></li>
-            <li><a href="">Exchange</a></li>
-            <li><a href="">Development</a></li>
+            <li *ngIf="!comingSoon"><a style="color: #fdfffe; border-bottom: 2px solid #fff; padding-bottom: 15px;" class="" routerLinkActive="active" [routerLink]="['/dashboard/landing']">Wallet</a></li>
+            <li *ngIf="comingSoon"><a style="padding-bottom: 15px;" class="" routerLinkActive="active" [routerLink]="['/dashboard/landing']">Wallet</a></li>
+            <li><a routerLinkActive="active" [routerLink]="['/dashboard/exchange_coming_soon']">Exchange</a></li>
+            <li><a routerLinkActive="active" [routerLink]="['/dashboard/development_coming_soon']">Development</a></li>
           </ul>
       </div>
 	  <div class="rightIconLink">
@@ -79,7 +80,7 @@
 
       <div class="selected-token">
         <div class="col-md-10">
-          <span class="selected-token-image">
+          <span class="selected-token-image" *ngIf="!comingSoon">
             <img src="../../assets/images/eos_logo.png" />
           </span>
           <!--<span class="selected-token-name">
@@ -124,7 +125,10 @@
         <a *ngFor="let token of ethTokens.tokens; let i = index" class="nav-link" routerLinkActive="active" [routerLink]="['/token/evo/dashboard/wallet/', token.symbol]">
           {{token.symbol}}
         </a>
-        <a class="nav-link" style="border-right:8px solid #258de6;color: #258de6;" routerLinkActive="active" [routerLink]="['landing']">
+        <a *ngIf="!comingSoon" class="nav-link" style="border-right:8px solid #258de6;color: #258de6;" routerLinkActive="active" [routerLink]="['landing']">
+          EOS
+        </a>
+        <a *ngIf="comingSoon" class="nav-link" routerLinkActive="active" [routerLink]="['landing']">
           EOS
         </a>
       </section>

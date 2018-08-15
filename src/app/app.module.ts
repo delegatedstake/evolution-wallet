@@ -22,6 +22,7 @@ import {EosLandingComponent} from './dashboard/landing/landing.component'; // Ad
 import {EvoLandingComponent} from './tokens/evo/dashboard/landing/landing.component'; // Adrian (Issue - 11)
 import {EvoWalletComponent} from './tokens/evo/dashboard/wallet/wallet.component'; // Adrian (Issue - 11)
 import {EvoSendComponent} from './tokens/evo/dashboard/send/send.component'; // Adrian (Issue - 11)
+import {ComingSoonComponent} from './dashboard/coming_soon/coming_soon.component';
 import {
   MatAutocompleteModule,
   MatCheckboxModule,
@@ -68,6 +69,7 @@ library.add(far, fas, fab, fal);
     EvoLandingComponent, // Adrian (Issue - 11)
     EvoWalletComponent, // Adrian (Issue - 11)
     EvoSendComponent, // Adrian (Issue - 11)
+    ComingSoonComponent,
   ],
   imports: [
     AccordionModule,

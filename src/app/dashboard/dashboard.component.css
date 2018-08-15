@@ -53,13 +53,20 @@ img {
   color: #fdfffe;
   border-bottom: 2px solid #fff;
   padding-bottom: 15px;
-  text-decoration: underline;
+  text-decoration: none;
 }
 
 .topMenu ul li a:hover {
   color: #fdfffe;
   border-bottom: 2px solid #fff;
   padding-bottom: 15px;
+}
+
+.topMenu ul li a.active {
+    color: #fdfffe;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 15px;
+    text-decoration: none;
 }
 
 .topBanner {

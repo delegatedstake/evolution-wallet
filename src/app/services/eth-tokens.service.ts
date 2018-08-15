@@ -18,7 +18,14 @@ export class EthTokensService {
       {symbol: 'PRA', decimals: 18, contractAddress: '0x9041fe5b3fdea0f5e4afdc17e75180738d877a01', logo: 'prochain_logo.png'},
     ];
 
+    // The ERC-20 ABI
     this.abi = [
+      "function balanceOf(address owner) view returns (uint)",
+      "function transfer(address to, uint amount)",
+      "event Transfer(address indexed from, address indexed to, uint amount)"
+    ];
+
+    /**this.abi = [
       {
         "constant": true,
         "inputs": [],
@@ -66,7 +73,7 @@ export class EthTokensService {
         "payable": false,
         "type": "function"
       }
-    ];
+    ];**/
   }
 
   /**

@@ -53,7 +53,7 @@
       </div>
       <div class="card info-card">
         <div class="card-header title">
-          Change Password &nbsp;
+          Create/Change Password &nbsp;
           <a role="tooltip" aria-haspopup="true" class="tooltip tooltip-md tooltip-right">
             <fa-icon [icon]="['far','question-circle']" class="blue" style="font-size: 16px;"></fa-icon>
             <span class="tooltip-content">Password used to <br> make transactions / actions.
@@ -61,7 +61,8 @@
           </a>
         </div>
         <div class="card-block">
-          <button class="btn btn-info-outline" (click)="changePassModal = true">CHANGE</button>
+          <button *ngIf="passwordSet === true" class="btn btn-info-outline" (click)="changePassModal = true">CHANGE</button>
+          <button *ngIf="passwordSet === false" class="btn btn-info-outline" (click)="createPassModal = true">CREATE</button>
         </div>
       </div>
     </div>
@@ -83,7 +84,7 @@
       <button type="button" class="btn btn-info-outline" (click)="logout()">
         Yes
       </button>
-      <div class="text-center">*SimplEOS will <br> be restarted</div>
+      <div class="text-center">*Application will <br> be restarted</div>
     </div>
   </div>
 </clr-modal>
@@ -155,7 +156,46 @@
   </div>
   <div class="modal-footer" style="padding: 0.5rem 0 0 0;">
     <button type="submit" class="btn btn-info-outline" (click)="changePass()" [disabled]="!passForm.valid">
-      Change and Restart simplEOS
+      Change Password
+    </button>
+  </div>
+</clr-modal>
+
+<!-- Adrian (Issue - 13): Show a create password modal if a password was not yet set -->
+<clr-modal [(clrModalOpen)]="createPassModal" [clrModalSize]="'md'">
+  <h3 class="modal-title text-white">
+    <fa-icon [icon]="['fas','key']"></fa-icon>&nbsp;&nbsp;Create Password
+  </h3>
+  <div class="modal-body">
+    <form [formGroup]="passForm2">
+      <mat-form-field class="mt-1  pass-input">
+        <input matInput #pass type="password" placeholder="New password" (blur)="passCompare2()"
+               [formControl]="passForm2['controls'].matchingPassword2['controls']['pass1']">
+        <fa-icon matSuffix *ngIf="pass.type === 'password'" [icon]="['far', 'eye']" size="lg" class="copy"
+                 (click)="pass.type = 'text'"></fa-icon>
+        <fa-icon matSuffix *ngIf="pass.type === 'text'" [icon]="['far', 'eye-slash']" size="lg" class="copy"
+                 (click)="pass.type = 'password'"></fa-icon>
+        <mat-hint align="start">
+          Min 10 characters
+        </mat-hint>
+        <mat-hint align="end">{{pass.value.length}} / 10+</mat-hint>
+      </mat-form-field>
+      <mat-form-field style="margin-top: 19px" class="pass-input">
+        <input matInput #pass2 type="password" placeholder="Confirm password" (blur)="passCompare2()"
+               [formControl]="passForm2['controls'].matchingPassword2['controls']['pass2']">
+        <fa-icon matSuffix *ngIf="pass2.type === 'password'" [icon]="['far', 'eye']" size="lg" class="copy"
+                 (click)="pass2.type = 'text'"></fa-icon>
+        <fa-icon matSuffix *ngIf="pass2.type === 'text'" [icon]="['far', 'eye-slash']" size="lg" class="copy"
+                 (click)="pass2.type = 'password'"></fa-icon>
+        <mat-error *ngIf="!passmatch2">
+          Passwords do not match!
+        </mat-error>
+      </mat-form-field>
+    </form>
+  </div>
+  <div class="modal-footer" style="padding: 0.5rem 0 0 0;">
+    <button type="submit" class="btn btn-info-outline" (click)="createPass()" [disabled]="!passForm2.valid">
+      Create Password
     </button>
   </div>
 </clr-modal>

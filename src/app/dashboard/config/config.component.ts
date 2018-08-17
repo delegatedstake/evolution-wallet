@@ -20,11 +20,15 @@ export class ConfigComponent implements OnInit {
   pinModal: boolean;
   clearPinModal: boolean;
   changePassModal: boolean;
+  createPassModal: boolean;
   passForm: FormGroup;
+  passForm2: FormGroup;
   pinForm: FormGroup;
   passmatch: boolean;
+  passmatch2: boolean;
   clearContacts: boolean;
   config: ToasterConfig;
+  passwordSet: boolean;
 
   static resetApp() {
     window['remote']['app']['relaunch']();
@@ -46,6 +50,7 @@ export class ConfigComponent implements OnInit {
     this.clearPinModal = false;
     this.clearContacts = false;
     this.changePassModal = false;
+    this.createPassModal = false;
     this.passForm = this.fb.group({
       oldpass: ['', [Validators.required, Validators.minLength(10)]],
       matchingPassword: this.fb.group({
@@ -53,9 +58,22 @@ export class ConfigComponent implements OnInit {
         pass2: ['', [Validators.required, Validators.minLength(10)]]
       })
     });
+    this.passForm2 = this.fb.group({
+      matchingPassword2: this.fb.group({
+        pass1: ['', [Validators.required, Validators.minLength(10)]],
+        pass2: ['', [Validators.required, Validators.minLength(10)]]
+      })
+    });
     this.pinForm = this.fb.group({
       pin: ['', Validators.required],
     });
+
+    const saved_hash = localStorage.getItem('evo-hash');
+    this.passwordSet = false;
+    if(saved_hash !== '' && saved_hash !== null) {
+      console.log(saved_hash);
+      this.passwordSet = true;
+    }
   }
 
   private showToast(type: string, title: string, body: string) {
@@ -101,13 +119,33 @@ export class ConfigComponent implements OnInit {
 
   changePass() {
     if (this.passmatch) {
-      const account = this.aService.selected.getValue();
-      const publicKey = account.details['permissions'][0]['required_auth'].keys[0].key;
-      this.crypto.authenticate(this.passForm.value.oldpass, publicKey).then(() => {
-        this.crypto.changePass(publicKey, this.passForm.value.matchingPassword.pass2).then(() => {
-          ConfigComponent.resetApp();
-        });
-      });
+      if(this.crypto.validWalletPassword(this.passForm.value.oldpass)) {
+        this.crypto.createWalletPassword(this.passForm.value.matchingPassword.pass2);
+        this.showToast('success', 'New Password defined!', '');
+        this.passForm.controls['oldpass'].setValue('');
+        this.passForm.controls['matchingPassword']['controls'].pass1.setValue('');
+        this.passForm.controls['matchingPassword']['controls'].pass2.setValue('');
+        this.changePassModal = false;
+      } else {
+          this.showToast('error', 'Invalid Old Password', '');
+      }
+    }
+  }
+
+  /**
+   * Adrian (Issue - 13): Create a new password if one
+   * was not yet created.
+   */
+  createPass() {
+    console.log('Doors');
+    if (this.passmatch2) {
+      console.log(this.passForm2.value.matchingPassword2.pass2)
+      // Adrian (): Using the same method used to store pin
+      this.crypto.createWalletPassword(this.passForm2.value.matchingPassword2.pass2);
+      this.showToast('success', 'New Password defined!', '');
+      this.createPassModal = false;
+      this.passwordSet = true;
+      //ConfigComponent.resetApp();
     }
   }
 
@@ -119,6 +157,18 @@ export class ConfigComponent implements OnInit {
       } else {
         this.passForm['controls'].matchingPassword['controls']['pass2'].setErrors({'incorrect': true});
         this.passmatch = false;
+      }
+    }
+  }
+
+  passCompare2() {
+    if (this.passForm2.value.matchingPassword2.pass1 && this.passForm2.value.matchingPassword2.pass2) {
+      if (this.passForm2.value.matchingPassword2.pass1 === this.passForm2.value.matchingPassword2.pass2) {
+        this.passForm2['controls'].matchingPassword2['controls']['pass2'].setErrors(null);
+        this.passmatch2 = true;
+      } else {
+        this.passForm2['controls'].matchingPassword2['controls']['pass2'].setErrors({'incorrect': true});
+        this.passmatch2 = false;
       }
     }
   }

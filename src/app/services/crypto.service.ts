@@ -222,6 +222,29 @@ export class CryptoService {
     // this.lock();
   }
 
+  /**
+   * Adrian (Issue - 13):
+   */
+  createWalletPassword(pass: string) {
+    if (pass !== '') {
+      const salt = CryptoJS.lib.WordArray['random'](128 / 8);
+      const hash = CryptoJS.PBKDF2(pass, salt, {keySize: 512 / 32, iterations: 1000}).toString();
+      localStorage.setItem('evo-salt', JSON.stringify(salt));
+      localStorage.setItem('evo-hash', hash);
+    }
+  }
+
+  validWalletPassword(pass: string): boolean {
+    const saved_hash = localStorage.getItem('evo-hash');
+    const salt = JSON.parse(localStorage.getItem('evo-salt'));
+    const hash = CryptoJS.PBKDF2(pass, salt, {keySize: 512 / 32, iterations: 1000}).toString();
+    if (hash === saved_hash) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   unlock(pin: string, target: string[]): boolean {
     const saved_hash = localStorage.getItem('simpleos-hash');
     const salt = JSON.parse(localStorage.getItem('simpleos-salt'));

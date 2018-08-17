@@ -94,19 +94,20 @@
   </h3>
   <div class="modal-body">
     <h4 class="blue" style="margin-bottom: 10px;">{{ sendForm.value.to }}</h4>
-    <div>Are you sure you want to submit this transaction?</div>
+    <!--<div>Are you sure you want to submit this transaction?</div>-->
   </div>
   <div class="modal-footer">
     <form [formGroup]="confirmForm" class="confirmForm">
-      <mat-form-field>
-        <input matInput #pass type="password" (keyup.enter)="transfer()" placeholder="Password" formControlName="pass">
+      <!--<mat-form-field>
+        <input matInput #pass type="password" placeholder="Password" formControlName="pass">
         <mat-hint class="error" align="start" *ngIf="wrongpass !== ''">
           {{wrongpass}}
         </mat-hint>
         <br clear="all"/>
-      </mat-form-field>
+      </mat-form-field>-->
+      <div style="margin-top:20px;">Are you sure you want to submit this transaction?</div>
       <button type="button" class="btn btn-info-outline" style="margin-top: 12px;" (click)="transfer()"
-              [disabled]="!confirmForm.valid || busy">
+              >
         Confirm
         <fa-icon [icon]="['far','spinner']" [spin]="true" *ngIf="busy"></fa-icon>
       </button>

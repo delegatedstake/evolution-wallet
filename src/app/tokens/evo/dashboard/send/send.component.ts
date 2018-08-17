@@ -59,7 +59,7 @@ export class EvoSendComponent {
     this.sendForm = this.fb.group({
       to: ['', Validators.required],
       amount: ['', Validators.required],
-      gasLimit: [21000, Validators.required],
+      gasLimit: [40000, Validators.required],
       showGasLimit: [false]
     });
     this.confirmForm = this.fb.group({
@@ -93,10 +93,40 @@ export class EvoSendComponent {
       if(this.ethTokens.tokens[key].symbol.toLowerCase() === this.symbol.toLowerCase()) {
         this.selectedToken = this.ethTokens.tokens[key];
         this.contractAddress = this.selectedToken['contractAddress'];
+        this.numberOfDecimals = this.selectedToken['decimals'];
         break;
       }
     }
 
+    this.getBalance();
+
+    // Adrian (): Need to check if the '0x' was added via the import and if not add it
+    /**let privateKey = localStorage.getItem('eth-private-key');
+    if(privateKey.substring(0, 2) !== '0x') {
+      privateKey = "0x" + privateKey;
+    }
+
+    let wallet = new ethers.Wallet(privateKey);
+    this.fromAccount = wallet.address; // This is the public key
+
+    wallet.provider = ethers.providers.getDefaultProvider('ropsten');
+    //wallet.provider = ethers.providers.getDefaultProvider();
+
+    if(this.symbol.toLowerCase() == 'eth') {
+      wallet.getBalance().then((balance) => {
+        this.token_balance = ethers.utils.formatEther(balance);
+      });
+    } else {
+      let contract = new ethers.Contract(this.contractAddress, this.abi, wallet.provider);
+      contract.balanceOf(this.fromAccount).then((balance) => {
+        this.token_balance = this.getValueTransaction(balance);
+      }).catch((e) => {
+        this.showToast('danger', 'Unable to retrieve Account Balance!', e.message);
+      });
+    }**/
+  }
+
+  getBalance() {
     // Adrian (): Need to check if the '0x' was added via the import and if not add it
     let privateKey = localStorage.getItem('eth-private-key');
     if(privateKey.substring(0, 2) !== '0x') {
@@ -106,6 +136,7 @@ export class EvoSendComponent {
     let wallet = new ethers.Wallet(privateKey);
     this.fromAccount = wallet.address; // This is the public key
 
+    //wallet.provider = ethers.providers.getDefaultProvider('ropsten');
     wallet.provider = ethers.providers.getDefaultProvider();
 
     if(this.symbol.toLowerCase() == 'eth') {
@@ -215,18 +246,23 @@ export class EvoSendComponent {
     const amount = this.sendForm.get('amount').value;
     const gasLimit = this.sendForm.get('gasLimit').value;
 
-    const privateKey = "0x" + localStorage.getItem('eth-private-key');
+    let privateKey = localStorage.getItem('eth-private-key');
+    if(privateKey.substring(0, 2) !== '0x') {
+      privateKey = "0x" + privateKey;
+    }
     let wallet = new ethers.Wallet(privateKey);
+    //wallet.provider = ethers.providers.getDefaultProvider('ropsten');
     wallet.provider = ethers.providers.getDefaultProvider();
 
     // Send tokens
-    if(this.symbol.toLowerCase() == 'eth') {
-      var transaction = {
+    if(this.symbol.toLowerCase() === 'eth') {
+      console.log('Send ETH');
+      let transaction = {
         // Gas Limit; 21000 will send ether to another use, but to execute contracts
         // larger limits are required. The provider.estimateGas can be used for this.
         gasLimit: gasLimit,
         // Recommendations: omit gasPrice; the provider will query the network
-        gasPrice: this.originalGasPrice,
+        gasPrice: this.gasPrice,
         // Required; unless deploying a contract (in which case omit)
         to: to,
         // Optional
@@ -235,33 +271,48 @@ export class EvoSendComponent {
       };
 
       // Send the transaction
-      wallet.sendTransaction(transaction).then(function(transactionHash) {
+      wallet.sendTransaction(transaction).then(transactionHash => {
         console.log(transactionHash);
-        this.showToast('success', 'Your transaction was sent successfully!', 'Transaction with hash code: ' + transactionHash + ' was created.');
+        this.showToast('success', 'Your transaction was sent successfully!', 'Transaction with hash code: ' + transactionHash.hash
+ + ' was created.');
         this.sendForm.controls['to'].setValue('');
         this.sendForm.controls['amount'].setValue('');
         // Adrian (): Do a setTimeout to redirect to the History page
         this.busy = false;
+        this.sendModal = false;
+        this.getBalance();
       }).catch((e) => {
         // Show the error message
         this.showToast('danger', 'An error occured when sending the transaction!', e.message);
         this.transactionErrorMsg = e.message;
         this.busy = false;
+        this.sendModal = false;
       });
     } else {
-      let contract = new ethers.Contract(to, this.abi, wallet);
+      let contract = new ethers.Contract(this.contractAddress, this.abi, wallet);
       let numberOfTokens = ethers.utils.parseUnits(amount, this.numberOfDecimals);
 
-      contract.transfer(to, numberOfTokens).then(function(tx) {
+      let options = {
+        gasPrice: this.gasPrice,
+        gasLimit: gasLimit
+      };
+
+      contract.transfer(to, numberOfTokens, options).then(tx => {
         console.log(tx);
-        this.showToast('success', 'Your transaction was sent successfully!', 'Transaction with hash code: ' + tx + ' was created.');
+        this.showToast('success', 'Your transaction was sent successfully!', 'Transaction with hash code: ' + tx.hash + ' was created.');
         // Adrian (): Do a setTimeout to redirect to the History page
+        this.sendForm.controls['to'].setValue('');
+        this.sendForm.controls['amount'].setValue('');
         this.busy = false;
+        this.sendModal = false;
+        this.getBalance();
       }).catch((e) => {
+        console.log(e);
         // Show the error message
         this.showToast('danger', 'An error occured when sending the transaction!', e.message);
         this.transactionErrorMsg = e.message;
         this.busy = false;
+        this.sendModal = false;
       });
     }
   }

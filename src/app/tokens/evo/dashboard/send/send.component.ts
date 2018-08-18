@@ -48,6 +48,7 @@ export class EvoSendComponent {
   symbol: string;
   selectedToken: Object;
   publicAddress: string;
+  passwordSet: boolean;
 
   constructor(private fb: FormBuilder,
               private crypto: CryptoService,
@@ -75,6 +76,12 @@ export class EvoSendComponent {
     this.transactionErrorMsg = '';
     this.wrongpass = '';
 
+    this.passwordSet = false;
+    const saved_hash = localStorage.getItem('evo-hash');
+    if(saved_hash !== null) {
+      this.passwordSet = true;
+    }
+
     this.router.events.subscribe((e: any) => {
       // If it is a NavigationEnd event re-initalise the component
       if (e instanceof NavigationEnd) {
@@ -99,31 +106,6 @@ export class EvoSendComponent {
     }
 
     this.getBalance();
-
-    // Adrian (): Need to check if the '0x' was added via the import and if not add it
-    /**let privateKey = localStorage.getItem('eth-private-key');
-    if(privateKey.substring(0, 2) !== '0x') {
-      privateKey = "0x" + privateKey;
-    }
-
-    let wallet = new ethers.Wallet(privateKey);
-    this.fromAccount = wallet.address; // This is the public key
-
-    wallet.provider = ethers.providers.getDefaultProvider('ropsten');
-    //wallet.provider = ethers.providers.getDefaultProvider();
-
-    if(this.symbol.toLowerCase() == 'eth') {
-      wallet.getBalance().then((balance) => {
-        this.token_balance = ethers.utils.formatEther(balance);
-      });
-    } else {
-      let contract = new ethers.Contract(this.contractAddress, this.abi, wallet.provider);
-      contract.balanceOf(this.fromAccount).then((balance) => {
-        this.token_balance = this.getValueTransaction(balance);
-      }).catch((e) => {
-        this.showToast('danger', 'Unable to retrieve Account Balance!', e.message);
-      });
-    }**/
   }
 
   getBalance() {
@@ -240,6 +222,19 @@ export class EvoSendComponent {
   }
 
   transfer() {
+    if(this.passwordSet === true) {
+      if(this.crypto.validWalletPassword(this.confirmForm.get('pass').value)) {
+        this.sendNow();
+      } else {
+        this.wrongpass = 'Wrong password!';
+      }
+    } else {
+      this.sendNow();
+    }
+  }
+
+  private sendNow() {
+    this.wrongpass = '';
     this.busy = true;
 
     const to = this.sendForm.get('to').value.toLowerCase();

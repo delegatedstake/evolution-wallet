@@ -152,15 +152,20 @@
   </div>
   <div class="modal-footer">
     <form [formGroup]="confirmForm" class="confirmForm">
-      <mat-form-field>
+      <mat-form-field *ngIf="passwordSet === true">
         <input matInput #pass type="password" (keyup.enter)="transfer()" placeholder="Password" formControlName="pass">
         <mat-hint class="error" align="start" *ngIf="wrongpass !== ''">
           {{wrongpass}}
         </mat-hint>
         <br clear="all"/>
       </mat-form-field>
-      <button type="button" class="btn btn-info-outline" style="margin-top: 12px;" (click)="transfer()"
+      <button *ngIf="passwordSet === true" type="button" class="btn btn-info-outline" style="margin-top: 12px;" (click)="transfer()"
               [disabled]="!confirmForm.valid || busy">
+        Confirm
+        <fa-icon [icon]="['far','spinner']" [spin]="true" *ngIf="busy"></fa-icon>
+      </button>
+      <button *ngIf="passwordSet === false" type="button" class="btn btn-info-outline" style="margin-top: 12px;" (click)="transfer()"
+              [disabled]="busy">
         Confirm
         <fa-icon [icon]="['far','spinner']" [spin]="true" *ngIf="busy"></fa-icon>
       </button>

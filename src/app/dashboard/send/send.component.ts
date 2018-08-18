@@ -53,6 +53,7 @@ export class SendComponent implements OnInit {
     name: 'EOS',
     price: 1.0000
   };
+  passwordSet: boolean; // Adrian ()
 
   constructor(private fb: FormBuilder,
               public aService: AccountsService,
@@ -92,6 +93,13 @@ export class SendComponent implements OnInit {
     this.accountvalid = false;
     this.unstaking = 0;
     this.unstakeTime = '';
+
+    // Adrian ()
+    this.passwordSet = false;
+    const saved_hash = localStorage.getItem('evo-hash');
+    if(saved_hash !== null) {
+      this.passwordSet = true;
+    }
   }
 
   filter(val: string, indexed): string[] {
@@ -345,7 +353,20 @@ export class SendComponent implements OnInit {
     this.sendModal = true;
   }
 
+  // Adrian ()
   transfer() {
+    if(this.passwordSet === true) {
+      if(this.crypto.validWalletPassword(this.confirmForm.get('pass').value)) {
+        this.sendNow();
+      } else {
+        this.wrongpass = 'Wrong password!';
+      }
+    } else {
+      this.sendNow();
+    }
+  }
+
+  private sendNow() {
     this.busy = true;
     const selAcc = this.aService.selected.getValue();
     const from = selAcc.name;
@@ -355,8 +376,8 @@ export class SendComponent implements OnInit {
     console.log(selAcc.details['permissions']);
     const publicKey = selAcc.details['permissions'][0]['required_auth'].keys[0].key;
     if (amount > 0 && this.sendForm.valid) {
-      this.crypto.authenticate(this.confirmForm.get('pass').value, publicKey).then((res) => {
-        if (res === true) {
+      //this.crypto.authenticate(this.confirmForm.get('pass').value, publicKey).then((res) => {
+        //if (res === true) {
           let contract = 'eosio.token';
           const tk_name = this.sendForm.get('token').value;
           let precision = 4;
@@ -398,14 +419,14 @@ export class SendComponent implements OnInit {
             }
             this.busy = false;
           });
-        } else {
+        /**} else {
           this.busy = false;
           this.wrongpass = 'Wrong password!';
-        }
-      }).catch(() => {
+        }**/
+      /**}).catch(() => {
         this.busy = false;
         this.wrongpass = 'Error: Wrong password!';
-      });
+      });**/
     }
   }
 

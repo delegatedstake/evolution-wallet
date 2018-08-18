@@ -151,7 +151,7 @@
       <span class="label label-blue">{{importedAccount['account_name']}}</span>
     </div>
   </clr-wizard-page>
-  <clr-wizard-page [clrWizardPageNextDisabled]="!passform.valid">
+  <!--<clr-wizard-page [clrWizardPageNextDisabled]="!passform.valid">
     <ng-template clrPageTitle>Step 2</ng-template>
     <form [formGroup]="passform">
       <h5>Define your password. This will be used to <strong>transactions confirmations.</strong></h5>
@@ -181,15 +181,15 @@
         </mat-error>
       </mat-form-field>
     </form>
-  </clr-wizard-page>
+  </clr-wizard-page>-->
   <clr-wizard-page [clrWizardPageNextDisabled]="!agree">
-    <ng-template clrPageTitle>Step 3</ng-template>
+    <ng-template clrPageTitle>Step 2</ng-template>
     <h5 style="color: #bebebe;">EOS Constitution</h5>
     <div class="constitution" [innerHTML]="eos.constitution"></div>
     <mat-checkbox [(ngModel)]="agree">I abide by the constitution</mat-checkbox>
   </clr-wizard-page>
   <clr-wizard-page (clrWizardPageOnCommit)="importCredentials()">
-    <ng-template clrPageTitle>Step 4 - optional</ng-template>
+    <ng-template clrPageTitle>Step 3 - optional</ng-template>
     <h5 style="margin-bottom: 15px">
       <span style="color: #c3c3c3;">Lockscreen pin.</span>
       Do you want to define a small privacy pin used to unlock the screen next time you enter SimplEOS?
@@ -242,7 +242,7 @@
     </div>
     <h5 *ngIf="exodusValid" class="afterdrop blue">Alright! Click to go to next page</h5>
   </clr-wizard-page>
-  <clr-wizard-page [clrWizardPageNextDisabled]="!passformexodus.valid">
+  <!--<clr-wizard-page [clrWizardPageNextDisabled]="!passformexodus.valid">
     <ng-template clrPageTitle>Step 2</ng-template>
     <form [formGroup]="passformexodus">
       <h5>Define your password. This will be used to transactions confirmations.</h5>
@@ -283,15 +283,15 @@
     <div *ngFor="let importedAccount of importedAccounts">
       <span class="label label-blue">{{importedAccount['account_name']}}</span>
     </div>
-  </clr-wizard-page>
+  </clr-wizard-page>-->
   <clr-wizard-page [clrWizardPageNextDisabled]="!agree2">
-    <ng-template clrPageTitle>Step 3</ng-template>
+    <ng-template clrPageTitle>Step 2</ng-template>
     <h5 style="color: #bebebe;">EOS Constitution</h5>
     <div class="constitution" [innerHTML]="eos.constitution"></div>
     <mat-checkbox [(ngModel)]="agree2">I abide by the constitution</mat-checkbox>
   </clr-wizard-page>
   <clr-wizard-page (clrWizardPageOnCommit)="importCredentialsExodus()">
-    <ng-template clrPageTitle>Step 4 - optional</ng-template>
+    <ng-template clrPageTitle>Step 3 - optional</ng-template>
     <h5 style="margin-bottom: 15px">
       <span style="color: #c3c3c3;">Lockscreen pin.</span>
       Do you want to define a small privacy pin used to unlock the screen next time you enter SimplEOS?

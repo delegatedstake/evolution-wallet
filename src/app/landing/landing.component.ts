@@ -315,7 +315,7 @@ export class LandingComponent implements OnInit {
   }
 
   importCredentials() {
-    if (this.passform.value.matchingPassword.pass1 === this.passform.value.matchingPassword.pass2) {
+    //if (this.passform.value.matchingPassword.pass1 === this.passform.value.matchingPassword.pass2) {
       this.crypto.initKeys(this.publicEOS, this.passform.value.matchingPassword.pass1).then(() => {
         this.crypto.encryptAndStore(this.pvtform.value.private_key, this.publicEOS).then(() => {
           this.aService.importAccounts(this.importedAccounts);
@@ -333,11 +333,11 @@ export class LandingComponent implements OnInit {
           console.log(err);
         });
       });
-    }
+    //}
   }
 
   importCredentialsExodus() {
-    if (this.passformexodus.value.matchingPassword.pass1 === this.passformexodus.value.matchingPassword.pass2) {
+    //if (this.passformexodus.value.matchingPassword.pass1 === this.passformexodus.value.matchingPassword.pass2) {
       this.crypto.initKeys(this.publicEOS, this.passformexodus.value.matchingPassword.pass1).then(() => {
         this.crypto.encryptAndStore(this.pk, this.publicEOS).then(() => {
           this.aService.importAccounts(this.importedAccounts);
@@ -355,7 +355,7 @@ export class LandingComponent implements OnInit {
           console.log(err);
         });
       });
-    }
+    //}
   }
 
   verifyPrivateKey(input, exodus, path) {

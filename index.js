@@ -38,14 +38,14 @@ devtools = args.some(val => val === '--devtools');
 
 function createWindow() {
   win = new BrowserWindow({
-    title: 'simplEOS',
+    title: 'Evolution Wallet',
     darkTheme: true,
     width: 1440,
     height: 800,
     minWidth: 800,
     minHeight: 600,
     frame: true,
-    icon: path.join(__dirname, 'src/assets/icons/ico/simpleos.ico')
+    icon: path.join(__dirname, 'src/assets/icons/ico/evolution_wallet.ico')
   });
   win.setMenu(null);
 
@@ -101,4 +101,3 @@ app.on('activate', () => {
     createWindow()
   }
 });
-

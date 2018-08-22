@@ -48,6 +48,7 @@ export class EvoSendComponent {
   symbol: string;
   selectedToken: Object;
   publicAddress: string;
+  privateKey: string;
   passwordSet: boolean;
 
   constructor(private fb: FormBuilder,
@@ -75,6 +76,7 @@ export class EvoSendComponent {
     this.gasLimitError = '';
     this.transactionErrorMsg = '';
     this.wrongpass = '';
+    this.privateKey = '';
 
     this.passwordSet = false;
     const saved_hash = localStorage.getItem('evo-hash');
@@ -109,30 +111,36 @@ export class EvoSendComponent {
   }
 
   getBalance() {
-    // Adrian (): Need to check if the '0x' was added via the import and if not add it
-    let privateKey = localStorage.getItem('eth-private-key');
-    if(privateKey.substring(0, 2) !== '0x') {
-      privateKey = "0x" + privateKey;
-    }
+    let publickey = localStorage.getItem('eth-public-key');
+    this.crypto.initEthKeys(publickey).then(() => {
+        this.crypto.decryptEthKey().then((result) => {
+          this.privateKey = result;
+          if(this.privateKey.substring(0, 2) !== '0x') {
+            this.privateKey = "0x" + this.privateKey;
+          }
 
-    let wallet = new ethers.Wallet(privateKey);
-    this.fromAccount = wallet.address; // This is the public key
+          let wallet = new ethers.Wallet(this.privateKey);
+          this.fromAccount = wallet.address; // This is the public key
 
-    //wallet.provider = ethers.providers.getDefaultProvider('ropsten');
-    wallet.provider = ethers.providers.getDefaultProvider();
+          //wallet.provider = ethers.providers.getDefaultProvider('ropsten');
+          wallet.provider = ethers.providers.getDefaultProvider();
 
-    if(this.symbol.toLowerCase() == 'eth') {
-      wallet.getBalance().then((balance) => {
-        this.token_balance = ethers.utils.formatEther(balance);
-      });
-    } else {
-      let contract = new ethers.Contract(this.contractAddress, this.abi, wallet.provider);
-      contract.balanceOf(this.fromAccount).then((balance) => {
-        this.token_balance = this.getValueTransaction(balance);
-      }).catch((e) => {
-        this.showToast('danger', 'Unable to retrieve Account Balance!', e.message);
-      });
-    }
+          if(this.symbol.toLowerCase() == 'eth') {
+            wallet.getBalance().then((balance) => {
+              this.token_balance = ethers.utils.formatEther(balance);
+            });
+          } else {
+            let contract = new ethers.Contract(this.contractAddress, this.abi, wallet.provider);
+            contract.balanceOf(this.fromAccount).then((balance) => {
+              this.token_balance = this.getValueTransaction(balance);
+            }).catch((e) => {
+              this.showToast('danger', 'Unable to retrieve Account Balance!', e.message);
+            });
+          }
+        }).catch((error) => {
+          console.log('Error', error);
+        });
+    });
   }
 
   getValueTransaction(value) {
@@ -241,11 +249,11 @@ export class EvoSendComponent {
     const amount = this.sendForm.get('amount').value;
     const gasLimit = this.sendForm.get('gasLimit').value;
 
-    let privateKey = localStorage.getItem('eth-private-key');
+    /**let privateKey = localStorage.getItem('eth-private-key');
     if(privateKey.substring(0, 2) !== '0x') {
       privateKey = "0x" + privateKey;
-    }
-    let wallet = new ethers.Wallet(privateKey);
+    }**/
+    let wallet = new ethers.Wallet(this.privateKey);
     //wallet.provider = ethers.providers.getDefaultProvider('ropsten');
     wallet.provider = ethers.providers.getDefaultProvider();
 

@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnDestroy, OnInit} from '@angular/core';
 import {Router, ActivatedRoute, NavigationEnd} from '@angular/router';
 import {HttpClient} from '@angular/common/http';
 import {EthTokensService} from '../../../../services/eth-tokens.service';
+import {CryptoService} from '../../../../services/crypto.service';
 import {BodyOutputType, Toast, ToasterConfig, ToasterService} from 'angular2-toaster';
 
 import * as moment from 'moment';
@@ -21,10 +22,12 @@ export class EvoWalletComponent {
   publicAddress: string;
   config: ToasterConfig;
   busy: boolean;
+  privateKey: string;
 
   constructor(private router: Router,
     private ethTokens: EthTokensService,
     private toaster: ToasterService,
+    private crypto: CryptoService,
     private http: HttpClient,
     private activeRoute: ActivatedRoute) {
 
@@ -37,6 +40,7 @@ export class EvoWalletComponent {
 
     this.moment = moment;
     this.busy = false;
+    this.privateKey = '';
 
     this.router.events.subscribe((e: any) => {
       if (e instanceof NavigationEnd) {
@@ -56,16 +60,24 @@ export class EvoWalletComponent {
       }
     }
 
-    let privateKey = localStorage.getItem('eth-private-key');
-    if(privateKey !== null) {
-      if(privateKey.substring(0, 2) !== '0x') {
-        privateKey = "0x" + privateKey;
-      }
-      let wallet = new ethers.Wallet(privateKey);
-      this.publicAddress = wallet.address;
+    let publickey = localStorage.getItem('eth-public-key');
+    this.crypto.initEthKeys(publickey).then(() => {
+        this.crypto.decryptEthKey().then((result) => {
+          this.privateKey = result;
 
-      this.getTransactionsHistory();
-    }
+          if(this.privateKey !== null) {
+            if(this.privateKey.substring(0, 2) !== '0x') {
+              this.privateKey = "0x" + this.privateKey;
+            }
+            let wallet = new ethers.Wallet(this.privateKey);
+            this.publicAddress = wallet.address;
+
+            this.getTransactionsHistory();
+          }
+        }).catch((error) => {
+          console.log('Error', error);
+        });
+    });
   }
 
   /**

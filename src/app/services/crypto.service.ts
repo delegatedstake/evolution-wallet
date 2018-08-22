@@ -12,6 +12,7 @@ export class CryptoService {
 
   private ivLen = 12;
   private masterKey: CryptoKey;
+  private masterEthKey: CryptoKey;
   private textEncoder = new TextEncoder();
   private basePublicKey = '';
   public locked = true;
@@ -36,7 +37,8 @@ export class CryptoService {
   async initKeys(publickey, pass): Promise<void> {
     const salt = this.textEncoder.encode(publickey);
     this.basePublicKey = publickey;
-    const importedPassword = await crypto.subtle.importKey('raw', this.textEncoder.encode(pass), 'PBKDF2', false, ['deriveKey']);
+    //const importedPassword = await crypto.subtle.importKey('raw', this.textEncoder.encode(pass), 'PBKDF2', false, ['deriveKey']);
+    const importedPassword = await crypto.subtle.importKey('raw', this.textEncoder.encode('123456'), 'PBKDF2', false, ['deriveKey']);
     const tempKey = await crypto.subtle.deriveKey(
       {
         name: 'PBKDF2',
@@ -98,6 +100,86 @@ export class CryptoService {
       private: this.bufferToBase64(encryptedData)
     };
     localStorage.setItem('eos_keys.' + this.eosjs.chainID, JSON.stringify(store));
+  }
+
+  // Adrian ()
+  async encryptAndStoreEthKey(data): Promise<void> {
+    const encryptedData = await this.encryptEthKey(data);
+    let store = '';
+    store = this.bufferToBase64(encryptedData);
+    localStorage.setItem('eth-private-key', store);
+  }
+
+  // Adrian ()
+  async decryptEthKey(): Promise<any> {
+    const store = localStorage.getItem('eth-private-key');
+    if(store) {
+      const encryptedData = this.base64ToBuffer(store);
+      const iv = encryptedData.slice(0, this.ivLen);
+      const data = encryptedData.slice(this.ivLen);
+      setTimeout(() => {
+        this.eosjs.clearInstance();
+      }, 5000);
+      const decrypted = await crypto.subtle.decrypt({
+        name: 'AES-GCM',
+        iv: iv
+      }, this.masterEthKey, data);
+      //console.log(decrypted);
+      //console.log(String.fromCharCode.apply(null, new Uint8Array(decrypted)).replace(/"/g, ''));
+      //this.eosjs.baseConfig.keyProvider.push(String.fromCharCode.apply(null, new Uint8Array(decrypted)).replace(/"/g, ''));
+      //this.eosjs.reloadInstance();
+      return String.fromCharCode.apply(null, new Uint8Array(decrypted)).replace(/"/g, '');
+    } else {
+      return false;
+    }
+  }
+
+  // Adrian ()
+  async initEthKeys(publickey): Promise<void> {
+    const salt = this.textEncoder.encode(publickey);
+    //this.basePublicKey = publickey;
+    //const importedPassword = await crypto.subtle.importKey('raw', this.textEncoder.encode(pass), 'PBKDF2', false, ['deriveKey']);
+    const importedPassword = await crypto.subtle.importKey('raw', this.textEncoder.encode('1234567'), 'PBKDF2', false, ['deriveKey']);
+    //const pass = CryptoJS.lib.WordArray['random'](128 / 8);
+    //const importedPassword = await crypto.subtle.importKey('raw', this.textEncoder.encode(pass), 'PBKDF2', false, ['deriveKey']);
+    const tempKey = await crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2',
+        salt: salt,
+        iterations: 100000,
+        hash: 'SHA-256'
+      },
+      importedPassword,
+      {name: 'AES-GCM', length: 256},
+      true,
+      ['encrypt']
+    );
+    const exportedTempKey = await crypto.subtle.exportKey('raw', tempKey);
+    const importedTempKey = await crypto.subtle.importKey('raw', exportedTempKey, 'PBKDF2', false, ['deriveKey']);
+    this.masterEthKey = await crypto.subtle.deriveKey(
+      {
+        name: 'PBKDF2', salt: salt,
+        iterations: 100000, hash: 'SHA-256'
+      },
+      importedTempKey,
+      {name: 'AES-GCM', length: 256},
+      false,
+      ['encrypt', 'decrypt']
+    );
+  }
+
+  private async encryptEthKey(data): Promise<Uint8Array> {
+    const compressed = this.textEncoder.encode(JSON.stringify(data));
+    const initializationVector = new Uint8Array(this.ivLen);
+    crypto.getRandomValues(initializationVector);
+    const encrypted = await crypto.subtle.encrypt({
+        name: 'AES-GCM',
+        iv: initializationVector
+      },
+      this.masterEthKey,
+      compressed
+    );
+    return CryptoService.concatUint8Array(initializationVector, new Uint8Array(encrypted));
   }
 
   /**

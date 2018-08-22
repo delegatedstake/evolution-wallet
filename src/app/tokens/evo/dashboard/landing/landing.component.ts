@@ -34,10 +34,22 @@ export class EvoLandingComponent implements OnInit {
           alert('cannot navigate :(');
         });
       }
+
+      // Testing
+      /**this.crypto.initEthKeys('0x17c227c16ccfe9bbcb6cb2bc43195ff6c246d0e1').then(() => {
+        this.crypto.encryptAndStoreEthKey('').then(() => {
+          this.crypto.decryptEthKey().then((result) => {
+            console.log(result);
+          }).catch((error) => {
+            console.log('Error', error);
+          });
+        }).catch((err) => {
+          console.log(err);
+        });
+      });**/
     }
 
     importPrivateKey() {
-      let key = 'eth-private-key';
       this.privateKey = this.importForm.get('privateKey').value;
 
       if(this.privateKey.length != 64) {
@@ -52,16 +64,26 @@ export class EvoLandingComponent implements OnInit {
         try {
           let wallet = new ethers.Wallet(this.privateKey);
           wallet.provider = new ethers.providers.getDefaultProvider();
+          let publicKey = wallet.address;
 
-          localStorage.setItem(key, this.privateKey);
-          this.showToast('success', 'Private key has been successfully imported.', 'Please save you private key in a safe place.');
+          // Adrian (): Encrypt and Store key
+          this.crypto.initEthKeys(publicKey).then(() => {
+            this.crypto.encryptAndStoreEthKey(this.privateKey).then(() => {
+              this.showToast('success', 'Private key has been successfully imported.', 'Please save you private key in a safe place.');
 
-          this.importForm.controls['privateKey'].setErrors(null);
-          this.errormsg = '';
+              this.importForm.controls['privateKey'].setErrors(null);
+              this.errormsg = '';
 
-          this.router.navigate(['/token/evo/dashboard/wallet/eth']).catch(() => {
-            alert('cannot navigate :(');
+              localStorage.setItem('eth-public-key', publicKey);
+
+              this.router.navigate(['/token/evo/dashboard/wallet/eth']).catch(() => {
+                alert('cannot navigate :(');
+              });
+            }).catch((err) => {
+              console.log(err);
+            });
           });
+          //localStorage.setItem(key, this.privateKey);
         } catch(error) {
           this.importForm.controls['privateKey'].setErrors({'incorrect': true});
           this.errormsg = 'Invalid private key';

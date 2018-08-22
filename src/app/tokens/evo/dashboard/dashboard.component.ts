@@ -5,6 +5,7 @@ import {BodyOutputType, Toast, ToasterConfig, ToasterService} from 'angular2-toa
 import * as ethers from 'ethers';
 import * as moment from 'moment';
 import {createNumberMask} from 'text-mask-addons/dist/textMaskAddons';
+import {CryptoService} from '../../../services/crypto.service';
 import {HttpClient} from '@angular/common/http';
 import {Router, ActivatedRoute, NavigationEnd} from '@angular/router';
 import {EthTokensService} from '../../../services/eth-tokens.service';
@@ -28,6 +29,7 @@ export class EvoDashboardComponent {
   constructor(private http: HttpClient,
     private fb: FormBuilder,
     private toaster: ToasterService,
+    private crypto: CryptoService,
     private activeRoute: ActivatedRoute,
     public ethTokens: EthTokensService,
     private router: Router) {
@@ -71,10 +73,18 @@ export class EvoDashboardComponent {
     if(privateKey === null) {
         this.privateKeyImported = false;
     } else {
-      let wallet = new ethers.Wallet(privateKey);
-      wallet.provider = ethers.providers.getDefaultProvider();
-      this.publicAddress = wallet.address;
-      this.privateKeyImported = true;
+      let publickey = localStorage.getItem('eth-public-key');
+      this.crypto.initEthKeys(publickey).then(() => {
+          this.crypto.decryptEthKey().then((result) => {
+            let privateKey = result;
+            let wallet = new ethers.Wallet(privateKey);
+            wallet.provider = ethers.providers.getDefaultProvider();
+            this.publicAddress = wallet.address;
+            this.privateKeyImported = true;
+          }).catch((error) => {
+            console.log('Error', error);
+          });
+      });
     }
   }
 

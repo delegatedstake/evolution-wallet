@@ -220,10 +220,13 @@ export class EOSJSService {
   async transfer(contract, from, to, amount, memo): Promise<any> {
     if (this.auth && contract === 'eosio.token') {
       return new Promise((resolve, reject) => {
+        console.log('EOS transfer');
         this.eos['transfer'](from, to, amount, memo, (err, trx) => {
           if (err) {
+            console.log('EOS transfer error');
             reject(JSON.parse(err));
           } else {
+            console.log('EOS transfer success');
             resolve(true);
           }
         });

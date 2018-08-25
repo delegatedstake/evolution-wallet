@@ -377,7 +377,8 @@ export class SendComponent implements OnInit {
     const publicKey = selAcc.details['permissions'][0]['required_auth'].keys[0].key;
     if (amount > 0 && this.sendForm.valid) {
       //this.crypto.authenticate(this.confirmForm.get('pass').value, publicKey).then((res) => {
-        //if (res === true) {
+      this.crypto.authenticate('123456', publicKey).then((res) => {
+        if (res === true) {
           let contract = 'eosio.token';
           const tk_name = this.sendForm.get('token').value;
           let precision = 4;
@@ -419,14 +420,14 @@ export class SendComponent implements OnInit {
             }
             this.busy = false;
           });
-        /**} else {
+        } else {
           this.busy = false;
           this.wrongpass = 'Wrong password!';
-        }**/
-      /**}).catch(() => {
+        }
+      }).catch(() => {
         this.busy = false;
         this.wrongpass = 'Error: Wrong password!';
-      });**/
+      });
     }
   }
 

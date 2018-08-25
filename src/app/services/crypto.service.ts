@@ -252,7 +252,8 @@ export class CryptoService {
           iv: iv
         }, this.masterKey, data);
         this.eosjs.baseConfig.keyProvider.push(String.fromCharCode.apply(null, new Uint8Array(decrypted)).replace(/"/g, ''));
-        this.eosjs.reloadInstance();
+        // Adrian (): I had to comment this out to get transfers working. Why?
+        //this.eosjs.reloadInstance();
         return true;
       } else {
         return false;

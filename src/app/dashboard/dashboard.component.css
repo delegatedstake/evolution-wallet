@@ -252,6 +252,8 @@ img {
 .deleteteacc:hover {
   color: white;
   cursor: pointer;
+}
+
 .selected-token {
   padding: 30px 0 10px;
   text-align: center;

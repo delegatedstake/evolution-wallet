@@ -251,40 +251,9 @@ export class CryptoService {
           name: 'AES-GCM',
           iv: iv
         }, this.masterKey, data);
-        this.eosjs.baseConfig.keyProvider.push(String.fromCharCode.apply(null, new Uint8Array(decrypted)).replace(/"/g, ''));
-        // Adrian (): I had to comment this out to get transfers working. Why?
-        //this.eosjs.reloadInstance();
-        return true;
-      } else {
-        return false;
-      }
-    } else {
-      return false;
-    }
-  }
-
-  /**
-   * Adrian (Issue - 11): Decrypt function that allows a custom
-   * key to be submitted.
-   */
-  async decryptKeys2(publickey, key): Promise<boolean> {
-    const store = JSON.parse(localStorage.getItem(key));
-    if (store) {
-      const payload = store[publickey]['private'];
-      if (payload) {
-        const encryptedData = this.base64ToBuffer(payload);
-        const iv = encryptedData.slice(0, this.ivLen);
-        const data = encryptedData.slice(this.ivLen);
-        /**setTimeout(() => {
-          this.eosjs.clearInstance();
-      }, 5000);**/
-        const decrypted = await crypto.subtle.decrypt({
-          name: 'AES-GCM',
-          iv: iv
-        }, this.masterKey, data);
-        console.log(decrypted);
-        /**this.eosjs.baseConfig.keyProvider.push(String.fromCharCode.apply(null, new Uint8Array(decrypted)).replace(/"/g, ''));
-        this.eosjs.reloadInstance();**/
+        const decryptedKey = String.fromCharCode.apply(null, new Uint8Array(decrypted));
+        this.eosjs.baseConfig.keyProvider = decryptedKey.replace(/^"(.+(?="$))"$/, '$1');
+        this.eosjs.reloadInstance();
         return true;
       } else {
         return false;

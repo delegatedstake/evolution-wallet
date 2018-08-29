@@ -106,7 +106,7 @@
         </div>
       </div>
       <div class="token-menu-container" *ngIf="privateKeyImported">
-        <div class="col-md-10 token-menu">
+        <div class="col-md-10 token-menu" *ngIf="!comingSoon">
           <span class="radius-left">
             <a class="" routerLinkActive="active" [routerLink]="['wallet']">
               <fa-icon [icon]="['far', 'history']"></fa-icon>&nbsp;&nbsp;HISTORY
@@ -151,7 +151,7 @@
           <fa-icon [icon]="['fas', 'heart']"></fa-icon>
           by <a style="color: #d7d7d7;" [routerLink]="['about']">EOS Rio</a>
         </div>-->
-        <div class="version">v0.1</div>
+        <div class="version">v0.1.0</div>
       </section>
     </nav>
   </div>

@@ -115,3 +115,16 @@
 .mat-input-element::placeholder {
     color: #cccccc;
 }
+
+.text-left{
+	text-align: center !important;
+}
+
+.check-card[_ngcontent-c3] {
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+    margin: 15px auto;
+    padding: 20px;
+    width: 450px;
+}

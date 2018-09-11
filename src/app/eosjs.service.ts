@@ -45,9 +45,7 @@ export class EOSJSService {
   reloadInstance() {
     this.auth = true;
     this.eos = EOSJS(this.baseConfig);
-    setTimeout(() => {
-      this.baseConfig.keyProvider = [];
-    }, 1000);
+    this.baseConfig.keyProvider = [];
   }
 
   clearInstance() {
@@ -64,6 +62,7 @@ export class EOSJSService {
       this.eos['getInfo']({}).then(result => {
         this.ready = true;
         this.online.next(result['head_block_num'] - result['last_irreversible_block_num'] < 400);
+        this.getConstitution();
         let savedAcc = [];
         const savedpayload = localStorage.getItem('simpleos.accounts.' + this.chainID);
         if (savedpayload) {
@@ -89,33 +88,21 @@ export class EOSJSService {
   }
 
   getChainInfo(): Promise<any> {
-    if (this.eos) {
-      return this.eos['getTableRows']({
-        json: true,
-        code: 'eosio',
-        scope: 'eosio',
-        table: 'global'
-      });
-    } else {
-      return new Promise(resolve => {
-        resolve();
-      });
-    }
+    return this.eos['getTableRows']({
+      json: true,
+      code: 'eosio',
+      scope: 'eosio',
+      table: 'global'
+    });
   }
 
   getRamMarketInfo(): Promise<any> {
-    if (this.eos) {
-      return this.eos['getTableRows']({
-        json: true,
-        code: 'eosio',
-        scope: 'eosio',
-        table: 'rammarket'
-      });
-    } else {
-      return new Promise(resolve => {
-        resolve();
-      });
-    }
+    return this.eos['getTableRows']({
+      json: true,
+      code: 'eosio',
+      scope: 'eosio',
+      table: 'rammarket'
+    });
   }
 
   getRefunds(account): Promise<any> {
@@ -231,40 +218,39 @@ export class EOSJSService {
   }
 
   async transfer(contract, from, to, amount, memo): Promise<any> {
-    if (this.auth) {
-      if (contract === 'eosio.token') {
-        return new Promise((resolve, reject) => {
-          this.eos['transfer'](from, to, amount, memo, (err, trx) => {
-            console.log(err, trx);
-            if (err) {
-              reject(JSON.parse(err));
-            } else {
-              resolve(true);
-            }
-          });
+    if (this.auth && contract === 'eosio.token') {
+      return new Promise((resolve, reject) => {
+        console.log('EOS transfer');
+        this.eos['transfer'](from, to, amount, memo, (err, trx) => {
+          if (err) {
+            console.log('EOS transfer error');
+            reject(JSON.parse(err));
+          } else {
+            console.log('EOS transfer success');
+            resolve(true);
+          }
         });
-      } else {
-        return new Promise((resolve, reject) => {
-          this.eos['contract'](contract, (err, tokenContract) => {
-            if (!err) {
-              if (tokenContract['transfer']) {
-                tokenContract['transfer'](from, to, amount, memo, (err2, trx) => {
-                  console.log(err, trx);
-                  if (err2) {
-                    reject(JSON.parse(err2));
-                  } else {
-                    resolve(true);
-                  }
-                });
-              } else {
-                reject();
-              }
+      });
+    } else {
+      return new Promise((resolve, reject) => {
+        this.eos.contract(contract, (err, tokenContract) => {
+          if (!err) {
+            if (tokenContract['transfer']) {
+              tokenContract['transfer'](from, to, amount, memo, (err2, trx) => {
+                if (err2) {
+                  reject(JSON.parse(err2));
+                } else {
+                  resolve(true);
+                }
+              });
             } else {
-              reject(JSON.parse(err));
+              reject();
             }
-          });
+          } else {
+            reject(JSON.parse(err));
+          }
         });
-      }
+      });
     }
   }
 

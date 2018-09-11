@@ -69,9 +69,14 @@
 }
 
 .check-card {
-    box-shadow: 4px 6px 5px 0 rgba(0, 0, 0, 0.34);
+    /*box-shadow: 4px 6px 5px 0 rgba(0, 0, 0, 0.34);
     border: none;
     background-color: rgba(162, 162, 162, 0.12);
+    margin-top: 31px;
+    width: 350px;*/
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
     margin-top: 31px;
     width: 350px;
 }
@@ -105,4 +110,31 @@
 
 .modal-body {
     overflow-y: hidden !important;
+}
+
+.check-card .text-center{
+	font-size: 16px;
+font-weight: bold;
+}
+
+.pin[_ngcontent-c1] {
+    box-shadow: none;
+    border: none;
+    background-color: transparent;
+    margin-top: 31px;
+    width: 350px;
+}
+
+.pin .public-input[_ngcontent-c1] {
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: 190px;
+}
+.forgotpin{
+	font-size: 12px !important;
+}
+
+.pin .card-block[_ngcontent-c1] {
+    
+    height: 130px;
 }

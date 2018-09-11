@@ -4,10 +4,11 @@
 		<div class="container">
 			<div class="topMenu">
           <ul>
-            <li *ngIf="!comingSoon"><a style="color: #fdfffe; border-bottom: 2px solid #fff; padding-bottom: 15px;" class="" routerLinkActive="active" [routerLink]="['/dashboard/landing']">Wallet</a></li>
+            <li *ngIf="!comingSoon"><a  class="" routerLinkActive="active" [routerLink]="['/dashboard/landing']">Wallet</a></li>
             <li *ngIf="comingSoon"><a style="padding-bottom: 15px;" class="" routerLinkActive="active" [routerLink]="['/dashboard/landing']">Wallet</a></li>
+            <li><a routerLinkActive="active" [routerLink]="['/dashboard/development_coming_soon']">Ecosystem</a></li>
             <li><a routerLinkActive="active" [routerLink]="['/dashboard/exchange_coming_soon']">Exchange</a></li>
-            <li><a routerLinkActive="active" [routerLink]="['/dashboard/development_coming_soon']">Development</a></li>
+            
           </ul>
       </div>
 	  <div class="rightIconLink">
@@ -29,7 +30,7 @@
           </div>
         </div>
         <div class="col-xs-auto col-md-auto" style="padding-left: 0; padding-right: 0; float: left;">
-          <div class="" [routerLink]="['/dashboard/config']">
+          <div style="outline: none" class="" [routerLink]="['/dashboard/config']">
             <div style="cursor: pointer;">
               <fa-icon [icon]="['fal', 'cog']" size="lg"></fa-icon>
             </div>
@@ -49,11 +50,7 @@
           <mat-tab-group id="header-tabs" (selectedIndexChange)="selectAccount($event)">
             <mat-tab *ngFor="let account of aService.accounts; let i = index">
               <ng-template mat-tab-label>
-                <div style="font-size: 10px;">ACCOUNT {{i + 1}}&nbsp;&nbsp;<fa-icon *ngIf="aService.accounts.length > 1"
-                                                                                    [icon]="['fas', 'times-circle']"
-                                                                                    class="deleteteacc"
-                                                                                    (click)="openRemoveAccModal(i,account)"></fa-icon>
-                </div>
+                <div style="font-size: 10px;">ACCOUNT {{i + 1}}</div>
                 <div style="font-size: 17px;">{{account.name}}</div>
                 <div class="value">{{account.full_balance}} EOS</div>
               </ng-template>
@@ -61,20 +58,10 @@
           </mat-tab-group>
         </div>
         <div class="col-xs-auto col-md-auto" style="padding-left: 0; padding-right: 0"
-             (click)="importKeyModal = true">
-          <div class="text-center navbar-btn newaccount">
-            <div style="padding-top: 16px">
-              <fa-icon [icon]="['fal', 'user-plus']" size="lg"></fa-icon>
-            </div>
-            <div style="font-size: 15px;">ADD</div>
-            <div style="font-size: 15px;">ACCOUNT</div>
-          </div>
-        </div>
-        <div class="col-xs-auto col-md-auto" style="padding-left: 0; padding-right: 0"
              (click)="newAccountModal = true">
           <div class="text-center navbar-btn newaccount">
             <div style="padding-top: 16px">
-              <fa-icon [icon]="['fal', 'user-edit']" size="lg"></fa-icon>
+              <fa-icon [icon]="['fal', 'user-plus']" size="lg"></fa-icon>
             </div>
             <div style="font-size: 15px;">NEW</div>
             <div style="font-size: 15px;">ACCOUNT</div>
@@ -106,7 +93,7 @@
         </div>
       </div>
       <div class="token-menu-container" *ngIf="privateKeyImported">
-        <div class="col-md-10 token-menu" *ngIf="!comingSoon">
+        <div class="col-md-10 token-menu">
           <span class="radius-left">
             <a class="" routerLinkActive="active" [routerLink]="['wallet']">
               <fa-icon [icon]="['far', 'history']"></fa-icon>&nbsp;&nbsp;HISTORY
@@ -139,7 +126,7 @@
         <a *ngFor="let token of ethTokens.tokens; let i = index" class="nav-link" routerLinkActive="active" [routerLink]="['/token/evo/dashboard/wallet/', token.symbol]">
           {{token.symbol}}
         </a>
-        <a *ngIf="!comingSoon" class="nav-link" style="border-right:8px solid #258de6;color: #258de6;" routerLinkActive="active" [routerLink]="['landing']">
+        <a *ngIf="!comingSoon" class="nav-link"  routerLinkActive="active" [routerLink]="['landing']">
           EOS
         </a>
         <a *ngIf="comingSoon" class="nav-link" routerLinkActive="active" [routerLink]="['landing']">
@@ -151,7 +138,7 @@
           <fa-icon [icon]="['fas', 'heart']"></fa-icon>
           by <a style="color: #d7d7d7;" [routerLink]="['about']">EOS Rio</a>
         </div>-->
-        <div class="version">v0.1.0</div>
+        <div class="version">v0.1</div>
       </section>
     </nav>
   </div>
@@ -376,97 +363,3 @@
   </clr-wizard-page>
 
 </clr-wizard>
-
-
-<!--IMPORT ONE MORE EXISTING WALLET-->
-<clr-wizard #importAccountWizard [(clrWizardOpen)]="importKeyModal" [clrWizardSize]="'md'">
-  <clr-wizard-title>Import one more existing account</clr-wizard-title>
-
-  <clr-wizard-button [type]="'cancel'">Cancel</clr-wizard-button>
-  <clr-wizard-button [type]="'previous'">Back</clr-wizard-button>
-  <clr-wizard-button [type]="'next'">Next</clr-wizard-button>
-  <clr-wizard-button [type]="'finish'">Finish</clr-wizard-button>
-
-  <clr-wizard-page [clrWizardPageNextDisabled]="!pvtform.valid"
-                   (clrWizardPageOnCommit)="verifyPrivateKey(pkField.value)"
-                   [clrWizardPagePreventDefault]="true"
-                   (clrWizardPageOnCancel)="doCancel()">
-    <ng-template clrPageTitle>Step 1</ng-template>
-    <h5 style="color: #a7a7a7;">Insert your other existing <strong>ACTIVE</strong> private key below</h5>
-    <form [formGroup]="pvtform">
-      <mat-form-field class="mt-1" style="width: 100%;">
-        <input #pkField matInput type="password" formControlName="private_key"
-               placeholder="EOS Active Private key">
-        <fa-icon matSuffix *ngIf="pkField.type === 'password'" [icon]="['far', 'eye']" size="lg" class="copy"
-                 (click)="pkField.type = 'text'"></fa-icon>
-        <fa-icon matSuffix *ngIf="pkField.type === 'text'" [icon]="['far', 'eye-slash']" size="lg" class="copy"
-                 (click)="pkField.type = 'password'"></fa-icon>
-        <mat-hint align="start">
-          ctrl c + ctrl v to copy & paste
-        </mat-hint>
-        <mat-error *ngIf="!pvtform.valid">
-          {{this.errormsg}}
-        </mat-error>
-      </mat-form-field>
-    </form>
-    <div *ngIf="importedAccounts.length > 0" style="color: #bebebe; margin-top: 10px">
-      Account<span *ngIf="importedAccounts.length > 1">s</span>
-    </div>
-    <div *ngFor="let importedAccount of importedAccounts">
-      <span class="label label-blue">{{importedAccount['account_name']}}</span>
-    </div>
-  </clr-wizard-page>
-  <clr-wizard-page [clrWizardPageNextDisabled]="!passform2.valid" (clrWizardPageOnCommit)="importAccounts()">
-    <ng-template clrPageTitle>Step 2</ng-template>
-    <form [formGroup]="passform2">
-      <h5>Define your password. This will be used to <strong>transactions confirmations.</strong></h5>
-      <mat-form-field class="mt-1">
-        <input matInput #importedpass type="password" placeholder="Password" (blur)="importedPassCompare()"
-               [formControl]="passform2['controls'].matchingPassword['controls']['pass1']">
-        <fa-icon matSuffix *ngIf="importedpass.type === 'password'" [icon]="['far', 'eye']" size="lg" class="copy"
-                 (click)="importedpass.type = 'text'"></fa-icon>
-        <fa-icon matSuffix *ngIf="importedpass.type === 'text'" [icon]="['far', 'eye-slash']" size="lg" class="copy"
-                 (click)="importedpass.type = 'password'"></fa-icon>
-        <mat-hint align="start">
-          Min 10 characters
-        </mat-hint>
-        <mat-hint align="end">{{importedpass.value.length}} / 10+</mat-hint>
-      </mat-form-field>
-      <mat-form-field style="margin-top: 19px">
-        <input matInput #importedpass2 type="password" placeholder="Confirm password" (blur)="importedPassCompare()"
-               [formControl]="passform2['controls'].matchingPassword['controls']['pass2']">
-
-        <fa-icon matSuffix *ngIf="importedpass2.type === 'password'" [icon]="['far', 'eye']" size="lg" class="copy"
-                 (click)="importedpass2.type = 'text'"></fa-icon>
-        <fa-icon matSuffix *ngIf="importedpass2.type === 'text'" [icon]="['far', 'eye-slash']" size="lg" class="copy"
-                 (click)="importedpass2.type = 'password'"></fa-icon>
-
-        <mat-error *ngIf="!passmatch2">
-          Passwords do not match!
-        </mat-error>
-      </mat-form-field>
-    </form>
-  </clr-wizard-page>
-</clr-wizard>
-<!--IMPORT ONE MORE EXISTING WALLET END-->
-
-
-<!--REMOVE ACCOUNT-->
-<clr-modal [(clrModalOpen)]="deleteAccModal" [clrModalSize]="'md'">
-  <h3 class="modal-title text-white">
-    <fa-icon [icon]="['far', 'user-minus']"></fa-icon>&nbsp;&nbsp;<span class="blue">Remove</span> account?
-  </h3>
-  <div class="modal-body" *ngIf="selectedAccRem">
-    <p style="margin-bottom: 20px; color: #b1b1b1;">Are you sure you want do remove the account <span class="blue">{{selectedAccRem.name}}</span>
-      from SimplEOS?</p>
-    <p style="margin-bottom: 20px;">*This will NOT delete your account from the blockchain, it will just remove it from
-      SimplEOS. Should you want to import it again, just click on the "ADD ACCOUNT" button.</p>
-  </div>
-  <div class="modal-footer">
-    <button class="btn btn-danger-outline" (click)="deleteAccModal = false">Cancel</button>
-    <button type="button" class="btn btn-info-outline" (click)="doRemoveAcc()">
-      Yes, remove
-    </button>
-  </div>
-</clr-modal>
-<!--REMOVE ACCOUNT-->

@@ -10,6 +10,10 @@ html, body {
   /*background-size: cover;*/
   background: -webkit-linear-gradient(to right, #232526, #414345); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #232526, #414345);
+  color: #fff;
+background-color: #2B2F4A;
+background-image: url('assets/images/header_banner.jpg');
+background-repeat: no-repeat;
 }
 
 html {
@@ -117,11 +121,6 @@ body {
 
 .btn-info-outline:hover {
   background-color: #0077b7 !important;
-  color: white !important;
-}
-
-.btn-danger-outline:hover {
-  background-color: #c92100 !important;
   color: white !important;
 }
 
@@ -324,4 +323,16 @@ input:not([readonly]) {
     background-color: #0094d2;
     color: #ffffff;
 }
+
+.loadingimg{
+	width: 200px;position: absolute;left: 40%;top: 30%;
+	/*top: calc(25% - 75px);animation: floating 3s ease-in-out infinite;*/
+}
+
+h3.text-white span.blue {
+    color: #fff;
+}
+
+
+
 /*Prime's accordion end*/
